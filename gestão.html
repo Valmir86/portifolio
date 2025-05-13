@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema de Logística</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+   /* Estilo tecnológico e moderno */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0f172a;
+  color: #f8fafc;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #38bdf8;
+  margin-bottom: 30px;
+  font-size: 2em;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+nav button {
+  padding: 10px 20px;
+  background-color: #1e293b;
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+nav button.active,
+nav button:hover {
+  background-color: #2563eb;
+  border-color: #1d4ed8;
+}
+
+section {
+  display: none;
+}
+
+section.active {
+  display: block;
+}
+
+form, #dashboard, #grafico-container, table {
+  background-color: #1e293b;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.05);
+}
+
+label {
+  margin-top: 10px;
+  font-weight: 600;
+  display: block;
+  color: #94a3b8;
+}
+
+input, select, textarea, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+button[type="submit"], .btn-secundario {
+  margin-top: 15px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  transition: background 0.3s;
+}
+
+button[type="submit"]:hover, .btn-secundario:hover {
+  background-color: #1d4ed8;
+}
+
+.feedback {
+  margin-top: 10px;
+  color: #22c55e;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #334155;
+  text-align: left;
+}
+
+th {
+  background-color: #1e40af;
+  color: #f1f5f9;
+}
+
+td {
+  background-color: #1e293b;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #f1f5f9;
+}
+
+.edit-btn {
+  background-color: #f59e0b;
+}
+
+.edit-btn:hover {
+  background-color: #d97706;
+}
+
+.action-btn:not(.edit-btn) {
+  background-color: #ef4444;
+}
+
+.action-btn:hover:not(.edit-btn) {
+  background-color: #dc2626;
+}
+/* Botão flutuante do WhatsApp */
+.whatsapp-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25d366;
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      text-align: center;
+      font-size: 30px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      transition: transform 0.3s;
+    }
+
+    .whatsapp-button:hover {
+      transform: scale(1.1);
+      background-color: #128c7e;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Sistema de Gestão de Logística</h1>
+
+  <nav>
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="cadastro">Cadastro</button>
+    <button class="tab-btn" data-tab="estoque">Estoque</button>
+  </nav>
+
+  <section id="dashboard" class="active">
+    <h2>Resumo Geral</h2>
+    <div>Total de Produtos: <span id="totalProdutos">0</span></div>
+    <div>Total em Estoque: <span id="totalEstoque">0</span></div>
+    <div id="grafico-container">
+      <h3>Gráfico de Estoque</h3>
+      <canvas id="grafico"></canvas>
+    </div>
+  </section>
+
+  <section id="cadastro">
+    <h2>Cadastro de Produto</h2>
+    <form id="produtoForm">
+      <label for="nomeProduto">Nome:</label>
+      <input type="text" id="nomeProduto" required>
+
+      <label for="descricaoProduto">Descrição:</label>
+      <textarea id="descricaoProduto" required></textarea>
+
+      <button type="submit">Cadastrar</button>
+      <div class="feedback" id="feedbackProduto"></div>
+    </form>
+
+    <h2>Entrada no Estoque</h2>
+    <form id="estoqueForm">
+      <label for="produtoSelect">Produto:</label>
+      <select id="produtoSelect" required></select>
+
+      <label for="rua">Rua:</label>
+      <input type="text" id="rua" required>
+
+      <label for="predio">Prédio:</label>
+      <input type="text" id="predio" required>
+
+      <label for="andar">Andar:</label>
+      <input type="text" id="andar" required>
+
+      <label for="quantidade">Quantidade:</label>
+      <input type="number" id="quantidade" required>
+
+      <button type="submit">Adicionar</button>
+      <div class="feedback" id="feedbackEstoque"></div>
+    </form>
+  </section>
+
+  <section id="estoque">
+    <h2>Estoque Atual</h2>
+    <input type="text" id="searchInput" placeholder="Pesquisar produto...">
+    <button class="btn-secundario" onclick="limparPesquisa()">Limpar</button>
+    <table id="estoqueTable">
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Rua</th>
+          <th>Prédio</th>
+          <th>Andar</th>
+          <th>Qtd</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <script>
+    const produtos = [];
+    const estoque = [];
+    let grafico;
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(btn.dataset.tab).classList.add('active');
+        btn.classList.add('active');
+      });
+    });
+
+    document.getElementById('produtoForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const nome = document.getElementById('nomeProduto').value.trim();
+      const descricao = document.getElementById('descricaoProduto').value.trim();
+
+      if (!nome || !descricao) return;
+
+      const id = produtos.length + 1;
+      produtos.push({ id, nome, descricao });
+
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = nome;
+      document.getElementById('produtoSelect').appendChild(option);
+
+      this.reset();
+      document.getElementById('feedbackProduto').textContent = "Produto cadastrado com sucesso!";
+      atualizarDashboard();
+    });
+
+    document.getElementById('estoqueForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const produtoId = parseInt(document.getElementById('produtoSelect').value);
+      const produto = produtos.find(p => p.id === produtoId);
+      const rua = document.getElementById('rua').value.trim();
+      const predio = document.getElementById('predio').value.trim();
+      const andar = document.getElementById('andar').value.trim();
+      const quantidade = parseInt(document.getElementById('quantidade').value);
+
+      if (!produto || !rua || !predio || !andar || !quantidade) return;
+
+      estoque.push({ id: estoque.length + 1, produtoNome: produto.nome, rua, predio, andar, quantidade });
+      this.reset();
+      document.getElementById('feedbackEstoque').textContent = "Entrada registrada!";
+      atualizarTabela();
+      atualizarDashboard();
+    });
+
+    document.getElementById('searchInput').addEventListener('input', function () {
+      atualizarTabela(this.value.toLowerCase());
+    });
+
+    function limparPesquisa() {
+      document.getElementById('searchInput').value = '';
+      atualizarTabela();
+    }
+
+    function atualizarTabela(filtro = '') {
+      const tbody = document.querySelector('#estoqueTable tbody');
+      tbody.innerHTML = '';
+      estoque.filter(e => e.produtoNome.toLowerCase().includes(filtro)).forEach(e => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${e.produtoNome}</td>
+            <td>${e.rua}</td>
+            <td>${e.predio}</td>
+            <td>${e.andar}</td>
+            <td>${e.quantidade}</td>
+            <td>
+              <button class="action-btn edit-btn" onclick="editarEstoque(${e.id})">Editar</button>
+              <button class="action-btn" onclick="removerEstoque(${e.id})">Remover</button>
+            </td>
+          </tr>`;
+      });
+    }
+
+    function editarEstoque(id) {
+      const item = estoque.find(e => e.id === id);
+      if (!item) return;
+
+      const tr = [...document.querySelectorAll('#estoqueTable tbody tr')].find(row =>
+        row.children[0].textContent === item.produtoNome
+      );
+
+      tr.innerHTML = `
+        <td><input type="text" value="${item.produtoNome}" id="editNome${id}"></td>
+        <td><input type="text" value="${item.rua}" id="editRua${id}"></td>
+        <td><input type="text" value="${item.predio}" id="editPredio${id}"></td>
+        <td><input type="text" value="${item.andar}" id="editAndar${id}"></td>
+        <td><input type="number" value="${item.quantidade}" id="editQtd${id}"></td>
+        <td>
+          <button class="action-btn edit-btn" onclick="salvarEdicao(${id})">Salvar</button>
+          <button class="action-btn" onclick="atualizarTabela()">Cancelar</button>
+        </td>
+      `;
+    }
+
+    function salvarEdicao(id) {
+      const item = estoque.find(e => e.id === id);
+      if (!item) return;
+
+      item.produtoNome = document.getElementById(`editNome${id}`).value;
+      item.rua = document.getElementById(`editRua${id}`).value;
+      item.predio = document.getElementById(`editPredio${id}`).value;
+      item.andar = document.getElementById(`editAndar${id}`).value;
+      item.quantidade = parseInt(document.getElementById(`editQtd${id}`).value);
+
+      atualizarTabela();
+      atualizarDashboard();
+    }
+
+    function removerEstoque(id) {
+      const i = estoque.findIndex(e => e.id === id);
+      if (i !== -1) {
+        estoque.splice(i, 1);
+        atualizarTabela();
+        atualizarDashboard();
+      }
+    }
+
+    function atualizarDashboard() {
+      document.getElementById('totalProdutos').textContent = produtos.length;
+      document.getElementById('totalEstoque').textContent = estoque.reduce((s, e) => s + e.quantidade, 0);
+      atualizarGrafico();
+    }
+
+    function atualizarGrafico() {
+      const ctx = document.getElementById('grafico').getContext('2d');
+      const dados = {};
+      estoque.forEach(e => dados[e.produtoNome] = (dados[e.produtoNome] || 0) + e.quantidade);
+
+      if (grafico) grafico.destroy();
+      grafico = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(dados),
+          datasets: [{
+            label: 'Quantidade',
+            data: Object.values(dados),
+            backgroundColor: '#52ab98'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+  </script>
+
+  <!-- Botão WhatsApp -->
+  <a class="whatsapp-button" href="https://wa.me/5511941824692" target="_blank" title="Fale conosco no WhatsApp">
+    &#128222;
+  </a>
+</body>
+
+</html>

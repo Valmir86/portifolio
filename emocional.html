@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Espaço de Acolhimento Emocional</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: #f0f0f0;
+        }
+
+        header {
+            background-color: #6A5ACD;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #eee;
+            padding: 0.5em;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            background-color: #6A5ACD;
+            color: white;
+            border: none;
+            padding: 0.5em 1em;
+            margin: 0.3em;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        section {
+            display: none;
+            padding: 1em;
+            max-width: 700px;
+            margin: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .chat-box {
+            border: 1px solid #ccc;
+            padding: 1em;
+            height: 250px;
+            overflow-y: auto;
+            background-color: #fff;
+            margin-bottom: 1em;
+            border-radius: 10px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 0.5em;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 0.5em;
+        }
+
+        .input-area button {
+            padding: 0.5em 1em;
+        }
+
+        .user-message {
+            text-align: right;
+            color: #4a90e2;
+            margin-bottom: 0.5em;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .bot-message {
+            text-align: left;
+            color: #6A5ACD;
+            margin-bottom: 0.5em;
+            animation: fadeIn 0.4s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1em;
+            background-color: #eee;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            .input-area button {
+                width: 100%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Botão flutuante do WhatsApp */
+    .whatsapp-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25d366;
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      text-align: center;
+      font-size: 30px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      transition: transform 0.3s;
+    }
+
+    .whatsapp-button:hover {
+      transform: scale(1.1);
+      background-color: #128c7e;
+    }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Espaço de Acolhimento Emocional</h1>
+    </header>
+
+    <nav>
+        <button onclick="showSection('chat')">Início</button>
+        <button onclick="showSection('sobre')">Sobre</button>
+        <button onclick="showSection('contato')">Contato</button>
+        <button onclick="toggleDarkMode()" aria-label="Alternar modo escuro" role="button">🌓</button>
+        <button onclick="toggleMusic()" aria-label="Tocar música" role="button">🎵</button>
+    </nav>
+
+    <section id="chat" class="active">
+        <h2>Como você está se sentindo hoje?</h2>
+        <div class="chat-box" id="chat-box">
+            <div class="bot-message">Olá! Estou aqui para ouvir você. 💬</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Digite aqui sua mensagem..." />
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </section>
+
+    <section id="sobre">
+        <h2>Sobre</h2>
+        <p>Este é um espaço digital de apoio emocional. Criado para oferecer escuta empática, acolhimento e palavras de
+            conforto nos momentos de dificuldade. 🌱</p>
+    </section>
+
+    <section id="contato">
+        <h2>Contato</h2>
+        <p>Se quiser conversar com alguém humano, recomendamos procurar apoio profissional.</p>
+        <p>Você pode acessar o CVV (Centro de Valorização da Vida): <br>
+            <a href="https://www.cvv.org.br/" target="_blank">www.cvv.org.br</a> ou ligar para <strong>188</strong>.
+        </p>
+        <p>Este site é apenas um espaço terapêutico virtual e não substitui ajuda profissional.</p>
+    </section>
+
+    <footer>
+        <p>Com carinho 💜 | Espaço de Acolhimento Emocional</p>
+    </footer>
+
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/audio/2022/10/12/audio_226bd29c51.mp3" type="audio/mpeg">
+        Seu navegador não suporta áudio.
+    </audio>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('section').forEach(sec => {
+                sec.style.display = 'none';
+                sec.classList.remove('active');
+            });
+            const current = document.getElementById(id);
+            current.style.display = 'block';
+            setTimeout(() => current.classList.add('active'), 10);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            if (music.paused) {
+                music.volume = 0.5;
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            if (message === '') return;
+
+            const chatBox = document.getElementById('chat-box');
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'user-message';
+            userDiv.textContent = message;
+            chatBox.appendChild(userDiv);
+
+            input.value = '';
+
+            setTimeout(() => {
+                const response = getTherapeuticResponse(message);
+                typeMessage(response, 'bot-message');
+            }, 500);
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function typeMessage(text, className) {
+            const chatBox = document.getElementById('chat-box');
+            const div = document.createElement('div');
+            div.className = className;
+            chatBox.appendChild(div);
+
+            let i = 0;
+            const interval = setInterval(() => {
+                div.textContent += text[i];
+                i++;
+                if (i >= text.length) clearInterval(interval);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 40);
+        }
+
+        function getTherapeuticResponse(message) {
+            message = message.toLowerCase();
+            if (message.includes("triste") || message.includes("deprimido")) {
+                return "Sinto muito que você esteja se sentindo assim. Lembre-se: não está sozinho(a) nisso. ❤️";
+            } else if (message.includes("ansioso") || message.includes("preocupado")) {
+                return "Respire fundo comigo por alguns segundos... Está tudo bem sentir isso. Você está fazendo o seu melhor. 🌬️";
+            } else if (message.includes("feliz") || message.includes("bem")) {
+                return "Fico muito feliz em saber disso! Cultivar bons momentos é muito importante. 🌞";
+            } else {
+                const mensagensPadrao = [
+                    "Estou aqui com você, ouvindo com atenção. 🧘‍♂️",
+                    "Pode se expressar à vontade, este é um espaço seguro. 🌼",
+                    "Você não está sozinho(a). Que bom que decidiu compartilhar. 🤝",
+                    "Se quiser, podemos respirar juntos um pouco agora. 🌬️",
+                    "Se acolher é um ato de coragem. Estou aqui. 💜"
+                ];
+                return mensagensPadrao[Math.floor(Math.random() * mensagensPadrao.length)];
+            }
+        }
+    </script>
+    <!-- Botão WhatsApp -->
+    <a class="whatsapp-button" href="https://wa.me/5511941824692" target="_blank" title="Fale conosco no WhatsApp">
+        &#128222;
+    </a>
+</body>
+
+</html>

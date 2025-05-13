@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valmir | Desenvolvedor Full Stack</title>
+    <link rel="stylesheet" href="style1.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+    <title>Menu Interativo</title>
+    <style>
+      body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #141111;
+    }
+
+    /* Container do menu */
+    .menu-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+    }
+
+    /* Botão principal */
+    .menu-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #6200ea;
+      color: #fff;
+      border: none;
+      font-size: 32px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .menu-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Itens do menu */
+    .menu-items {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-bottom: 10px;
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.3s ease;
+    }
+
+    .menu-items.show {
+      transform: scaleY(1);
+    }
+
+    .menu-items a {
+      background-color: #fff;
+      color: #6200ea;
+      text-decoration: none;
+      padding: 10px 15px;
+      margin: 5px 0;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    .menu-items a:hover {
+      background-color: #eee;
+    }
+
+  </style>
+</head>
+
+<body>
+    <button id="toggleTheme" class="theme-toggle">🌙</button>
+
+    <div class="menu-container">
+        <div class="menu-items" id="menuItems">
+            <a href="#inicio">Início</a>
+            <a href="#sobre">Sobre</a>
+            <a href="#contato">Contato</a>
+        </div>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menuItems');
+            menu.classList.toggle('show');
+        }
+    </script>
+
+    <body> 
+
+    <header>
+        
+        <section id="inicio"></section>
+        <div class="container">
+            <h1>Valmir</h1>
+            <p>Desenvolvedor Full Stack</p>
+            <a href="/VALMIR.pdf" class="btn" download>📄 Baixar Currículo</a>
+        </div>
+    </header>
+<section id="sobre"></section>
+    <main class="container">
+        <section class="fade-in">
+            <h2>🧑‍💻 Sobre Mim</h2>
+            <p>Sou um desenvolvedor Full Stack com formação pela UNINOVE (2024), apaixonado por criar interfaces e APIs
+                modernas com foco em performance, usabilidade e escalabilidade.</p>
+        </section>
+
+        <section class="fade-in">
+            <h2>🎓 Formação</h2>
+            <ul>
+                <li><strong>Curso:</strong> Análise e Desenvolvimento de Sistemas</li>
+                <li><strong>Instituição:</strong> Universidade UNINOVE</li>
+                <li><strong>Conclusão:</strong> Julho de 2024</li>
+            </ul>
+        </section>
+
+        <section class="fade-in">
+            <h2>🛠️ Tecnologias</h2>
+            <ul>
+                <li><strong>Frontend:</strong> HTML, CSS, JavaScript, React, Next.js, Tailwind</li>
+                <li><strong>Backend:</strong> Node.js, Express, Django, FastAPI</li>
+                <li><strong>Banco de Dados:</strong> MongoDB, PostgreSQL</li>
+                <li><strong>DevOps:</strong> Git, Docker, CI/CD, REST, GraphQL</li>
+            </ul>
+        </section>
+
+        <section class="fade-in">
+            <h2>🚀 Projetos</h2>
+
+            <div class="project-card">
+                <h3>🔧 Projeto 1</h3>
+                <p>Calculadora Científica</p>
+                <a href="/calculadora.html">Aqui está um projeto simples de calculadora científica feito com HTML, CSS e JavaScript. Ela inclui operações básicas e
+                funções científicas como seno, cosseno, tangente, logaritmo, raiz quadrada, etc.
+            Funções incluídas:
+            Operações básicas: + - * /
+            
+            Potência: ^ (representado por **)
+            
+            Funções científicas: sin, cos, tan, log, ln, √
+            
+            Constantes: π (Math.PI) e e (Math.E)</a>
+            </div>
+
+            <div class="project-card">
+                <h3>⚙️ Projeto 2</h3>
+                <p>Gestão de logistica</p>
+                <a href="/gestão.html">sistema de gestão de logística com armazenamento organizado por ruas, prédios e andares, </a>
+            </div>
+
+            <div class="project-card">
+                <h3>⚙️ Projeto 3</h3>
+                <p>Espaço de Acolhimento Emocional</p>
+                <a href="/emocional.html">Este é um espaço digital de apoio emocional. Criado para oferecer escuta empática, acolhimento e palavras de conforto
+                nos momentos de dificuldade.</a>
+            </div>
+        </section>
+<section id="contato"></section>
+        <section class="fade-in">
+            <h2>📬 Contato</h2>
+            <ul>
+                <li>Email: <a href="mailto:valmir.pereira86@hotmail.com">valmir.pereira86@hotmail.com</a></li>
+                <li>LinkedIn: <a href="https://linkedin.com/in/valmir-silva-49ab8a26b">linkedin</a></li>
+                <li>GitHub: <a href="https://github.com/Valmir86/portifoliovlr">github</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Valmir. Todos os direitos reservados.</p>
+    </footer>
+    <script>
+        const toggleButton = document.getElementById('toggleTheme');
+        const body = document.body;
+
+        toggleButton.addEventListener('click', () => {
+            body.classList.toggle('light');
+
+            // Alternar ícone
+            if (body.classList.contains('light')) {
+                toggleButton.textContent = '🌞';
+            } else {
+                toggleButton.textContent = '🌙';
+            }
+        });
+    </script>
+      
+    <script src="/script.js"></script>
+
+    <!-- Botão WhatsApp -->
+    <a class="whatsapp-button" href="https://wa.me/5511941824692" target="_blank" title="Fale conosco no WhatsApp">
+        &#128222;
+    </a>
+</body>
+
+</html>
