@@ -3,78 +3,387 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Valmir | Desenvolvedor Full Stack</title>
-    <link rel="stylesheet" href="style1.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-    <title>Menu Interativo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet" />
     <style>
-      body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #141111;
-    }
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Container do menu */
-    .menu-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 999;
-    }
+        /* Fundo escuro com gradiente sutil */
+        body {
+            font-family: 'Fira Code', monospace;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #ccc;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
 
-    /* Botão principal */
-    .menu-btn {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #6200ea;
-      color: #fff;
-      border: none;
-      font-size: 32px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
+        /* Canvas para códigos flutuantes */
+        #codeCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            opacity: 0.15;
+            background: transparent;
+        }
 
-    .menu-btn:active {
-      transform: scale(0.95);
-    }
+        /* Container do conteúdo */
+        .container {
+            max-width: 900px;
+            margin: 100px auto 50px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            background: rgba(20, 20, 30, 0.5);
+            border-radius: 12px;
+            box-shadow: 0 0 20px #7b61ff88;
+        }
 
-    /* Itens do menu */
-    .menu-items {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      margin-bottom: 10px;
-      transform: scaleY(0);
-      transform-origin: bottom;
-      transition: transform 0.3s ease;
-    }
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-    .menu-items.show {
-      transform: scaleY(1);
-    }
+        header h1 {
+            font-size: 3rem;
+            color: #a179ff;
+            text-shadow:
+                0 0 5px #a179ff,
+                0 0 15px #8e67f7,
+                0 0 20px #8866f7,
+                0 0 40px #7049e1;
+        }
 
-    .menu-items a {
-      background-color: #fff;
-      color: #6200ea;
-      text-decoration: none;
-      padding: 10px 15px;
-      margin: 5px 0;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      transition: background-color 0.3s ease;
-    }
+        header p {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-top: 10px;
+            letter-spacing: 1.2px;
+        }
 
-    .menu-items a:hover {
-      background-color: #eee;
-    }
+        /* Botão baixar currículo */
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #fff;
+            background: linear-gradient(45deg, #8e67f7, #7049e1);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #7b61ff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
 
-  </style>
+        .btn:hover {
+            background: linear-gradient(45deg, #7049e1, #8e67f7);
+            box-shadow: 0 0 30px #a179ff;
+            transform: scale(1.05);
+        }
+
+        /* Seções */
+        section {
+            margin-bottom: 50px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #4b3e91aa;
+        }
+
+        section h2 {
+            color: #a179ff;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #a179ffaa;
+            position: relative;
+        }
+
+        section h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #7b61ff;
+            border-radius: 5px;
+            margin-top: 8px;
+            box-shadow: 0 0 10px #7b61ff;
+        }
+
+        /* Listas */
+        ul {
+            list-style: none;
+            padding-left: 15px;
+            color: #ccc;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        ul li a {
+            color: #8e67f7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        ul li a:hover {
+            color: #a179ff;
+            text-shadow: 0 0 8px #a179ff;
+        }
+
+        /* Projeto cards */
+        .project-card {
+            background: rgba(80, 56, 200, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px #7b61ff44;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            box-shadow: 0 0 25px #a179ffcc;
+            transform: translateY(-5px);
+            background: rgba(120, 90, 255, 0.15);
+        }
+
+        .project-card h3 {
+            color: #b59fff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 8px #b59fffaa;
+        }
+
+        .project-card p,
+        .project-card a {
+            color: #ddd;
+            font-size: 1rem;
+            line-height: 1.4;
+            text-decoration: none;
+            cursor: pointer;
+            user-select: text;
+        }
+
+        .project-card a:hover {
+            color: #a179ff;
+            text-shadow: 0 0 12px #a179ff;
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 25px 10px;
+            font-size: 0.9rem;
+            color: #666;
+            border-top: 1px solid #4b3e91aa;
+            margin-top: 50px;
+        }
+
+        /* Menu flutuante */
+        .menu-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 15;
+            user-select: none;
+        }
+
+        .menu-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #8e67f7, #7049e1);
+            color: #fff;
+            font-size: 32px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 15px #7b61ffaa;
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-btn:active {
+            transform: scale(0.9);
+            box-shadow: 0 0 25px #a179ff;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-bottom: 10px;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 5px #7b61ffcc);
+            backdrop-filter: blur(10px);
+            background: rgba(40, 25, 90, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .menu-items.show {
+            transform: scaleY(1);
+        }
+
+        .menu-items a {
+            color: #a179ff;
+            padding: 12px 20px;
+            margin: 6px 0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease, background-color 0.3s ease;
+            border-radius: 5px;
+            user-select: none;
+        }
+
+        .menu-items a:hover {
+            background-color: #7b61ffdd;
+            color: #fff;
+            text-shadow: 0 0 10px #a179ff;
+        }
+
+        /* Botão de alternar tema */
+        #toggleTheme {
+            position: fixed;
+            top: 20px;
+            right: 25px;
+            z-index: 15;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #a179ff;
+            text-shadow: 0 0 10px #a179ffaa;
+            transition: color 0.3s ease;
+            user-select: none;
+        }
+
+        #toggleTheme:hover {
+            color: #7049e1;
+            text-shadow: 0 0 20px #7b61ff;
+        }
+
+        /* WhatsApp botão */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            font-size: 32px;
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #25d366cc;
+            z-index: 15;
+            text-decoration: none;
+            transition: box-shadow 0.3s ease;
+            user-select: none;
+        }
+
+        .whatsapp-button:hover {
+            box-shadow: 0 0 30px #25d366ff;
+        }
+
+        /* Efeito fade-in nas seções */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 1s forwards;
+            animation-delay: 0.3s;
+        }
+
+        .fade-in:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .fade-in:nth-child(3) {
+            animation-delay: 0.7s;
+        }
+
+        .fade-in:nth-child(4) {
+            animation-delay: 0.9s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tema claro */
+        body.light {
+            background: #eaeaea;
+            color: #222;
+        }
+
+        body.light header h1,
+        body.light section h2 {
+            color: #4a37b2;
+            text-shadow: none;
+        }
+
+        body.light .btn {
+            background: #4a37b2;
+            color: #fff;
+            box-shadow: 0 0 10px #4a37b2;
+        }
+
+        body.light .btn:hover {
+            background: #3d2f97;
+            box-shadow: 0 0 15px #3d2f97;
+        }
+
+        body.light .menu-btn {
+            background: #4a37b2;
+            box-shadow: none;
+        }
+
+        body.light .menu-items {
+            background: #ddd;
+            filter: none;
+            backdrop-filter: none;
+        }
+
+        body.light .menu-items a {
+            color: #4a37b2;
+        }
+
+        body.light .menu-items a:hover {
+            background-color: #b1a9f7;
+            color: #fff;
+            text-shadow: none;
+        }
+
+        body.light #toggleTheme {
+            color: #4a37b2;
+            text-shadow: none;
+        }
+    </style>
 </head>
 
 <body>
-    <button id="toggleTheme" class="theme-toggle">🌙</button>
+    <!-- Canvas para código flutuante -->
+    <canvas id="codeCanvas"></canvas>
+
+    <button id="toggleTheme" class="theme-toggle" title="Alternar Tema">🌙</button>
 
     <div class="menu-container">
         <div class="menu-items" id="menuItems">
@@ -85,17 +394,7 @@
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
     </div>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById('menuItems');
-            menu.classList.toggle('show');
-        }
-    </script>
-
-    <body> 
-
     <header>
-        
         <section id="inicio"></section>
         <div class="container">
             <h1>Valmir</h1>
@@ -103,9 +402,9 @@
             <a href="/VALMIR.pdf" class="btn" download>📄 Baixar Currículo</a>
         </div>
     </header>
-<section id="sobre"></section>
+
     <main class="container">
-        <section class="fade-in">
+        <section id="sobre" class="fade-in">
             <h2>🧑‍💻 Sobre Mim</h2>
             <p>Sou um desenvolvedor Full Stack com formação pela UNINOVE (2024), apaixonado por criar interfaces e APIs
                 modernas com foco em performance, usabilidade e escalabilidade.</p>
@@ -136,38 +435,38 @@
             <div class="project-card">
                 <h3>🔧 Projeto 1</h3>
                 <p>Calculadora Científica</p>
-                <a href="/calculadora.html">Aqui está um projeto simples de calculadora científica feito com HTML, CSS e JavaScript. Ela inclui operações básicas e
-                funções científicas como seno, cosseno, tangente, logaritmo, raiz quadrada, etc.
-            Funções incluídas:
-            Operações básicas: + - * /
-            
-            Potência: ^ (representado por **)
-            
-            Funções científicas: sin, cos, tan, log, ln, √
-            
-            Constantes: π (Math.PI) e e (Math.E)</a>
+                <a href="/calculadora.html" title="Ver projeto completo">Aqui está um projeto simples de calculadora
+                    científica feito com HTML, CSS e JavaScript. Ela inclui operações básicas e funções científicas como
+                    seno, cosseno, tangente, logaritmo, raiz quadrada, etc. Funções incluídas: Operações básicas: + - *
+                    / Potência: ^ (representado por **) Funções científicas: sin, cos, tan, log, ln, √ Constantes: π
+                    (Math.PI) e e (Math.E)</a>
             </div>
 
             <div class="project-card">
                 <h3>⚙️ Projeto 2</h3>
                 <p>Gestão de logistica</p>
-                <a href="/gestão.html">sistema de gestão de logística com armazenamento organizado por ruas, prédios e andares, </a>
+                <a href="/gestão.html" title="Ver projeto completo">Sistema de gestão de logística com armazenamento
+                    organizado por ruas, prédios e andares.</a>
             </div>
 
             <div class="project-card">
                 <h3>⚙️ Projeto 3</h3>
                 <p>Espaço de Acolhimento Emocional</p>
-                <a href="/emocional.html">Este é um espaço digital de apoio emocional. Criado para oferecer escuta empática, acolhimento e palavras de conforto
-                nos momentos de dificuldade.</a>
+                <a href="/emocional.html" title="Ver projeto completo">Este é um espaço digital de apoio emocional.
+                    Criado para oferecer escuta empática, acolhimento e palavras de conforto nos momentos de
+                    dificuldade.</a>
             </div>
+
         </section>
-<section id="contato"></section>
-        <section class="fade-in">
+
+        <section id="contato" class="fade-in">
             <h2>📬 Contato</h2>
             <ul>
                 <li>Email: <a href="mailto:valmir.pereira86@hotmail.com">valmir.pereira86@hotmail.com</a></li>
-                <li>LinkedIn: <a href="https://linkedin.com/in/valmir-silva-49ab8a26b">linkedin</a></li>
-                <li>GitHub: <a href="https://github.com/Valmir86/portifoliovlr">github</a></li>
+                <li>LinkedIn: <a href="https://linkedin.com/in/valmir-silva-49ab8a26b" target="_blank"
+                        rel="noopener noreferrer">linkedin</a></li>
+                <li>GitHub: <a href="https://github.com/Valmir86/portifoliovlr" target="_blank"
+                        rel="noopener noreferrer">github</a></li>
             </ul>
         </section>
     </main>
@@ -175,28 +474,76 @@
     <footer>
         <p>&copy; 2025 Valmir. Todos os direitos reservados.</p>
     </footer>
+
+    <a class="whatsapp-button" href="https://wa.me/5511941824692" target="_blank"
+        title="Fale conosco no WhatsApp">&#128222;</a>
+
     <script>
+        // Menu toggle
+        function toggleMenu() {
+            const menu = document.getElementById('menuItems');
+            menu.classList.toggle('show');
+        }
+
+        // Toggle tema claro/escuro
         const toggleButton = document.getElementById('toggleTheme');
         const body = document.body;
 
         toggleButton.addEventListener('click', () => {
             body.classList.toggle('light');
-
-            // Alternar ícone
             if (body.classList.contains('light')) {
                 toggleButton.textContent = '🌞';
             } else {
                 toggleButton.textContent = '🌙';
             }
         });
-    </script>
-      
-    <script src="/script.js"></script>
 
-    <!-- Botão WhatsApp -->
-    <a class="whatsapp-button" href="https://wa.me/5511941824692" target="_blank" title="Fale conosco no WhatsApp">
-        &#128222;
-    </a>
+        // Código flutuante tipo "Matrix" com 0 e 1
+        const canvas = document.getElementById('codeCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let columns;
+        let drops;
+
+        function setup() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            columns = Math.floor(width / 20);
+            drops = [];
+
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.floor(Math.random() * height / 20);
+            }
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(15, 12, 41, 0.1)'; // Fundo transparente para efeito rastro
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.fillStyle = '#a179ff'; // Cor neon roxa
+            ctx.font = '18px "Fira Code", monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = Math.random() > 0.5 ? '0' : '1';
+                ctx.fillText(text, i * 20, drops[i] * 20);
+
+                if (drops[i] * 20 > height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            setup();
+        });
+
+        setup();
+        setInterval(draw, 60);
+    </script>
 </body>
 
 </html>
