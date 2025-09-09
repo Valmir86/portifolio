@@ -41,45 +41,68 @@
             }
         }
 
-        /* Full-screen sections */
+        /* Menu superior */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, #a179ff, #ff7cf0, #a179ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -3px;
+            left: 0;
+            background-color: #a179ff;
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Seções */
         section {
-            width: 100vw;
+            width: 100%;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 60px 20px;
+            padding: 100px 20px 60px;
             position: relative;
-            z-index: 1;
-        }
-
-        h1 {
-            font-size: 3rem;
-            background: linear-gradient(90deg, #a179ff, #ff7cf0, #a179ff);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: glowText 6s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes glowText {
-            0% {
-                background-position: 0%;
-            }
-
-            100% {
-                background-position: 200%;
-            }
         }
 
         h2 {
-            color: #a179ff;
-            text-shadow: 0 0 12px #a179ff, 0 0 22px #7049e1;
-            margin-bottom: 20px;
             font-size: 2rem;
+            color: #a179ff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 12px #a179ff, 0 0 22px #7049e1;
         }
 
         p {
@@ -88,7 +111,6 @@
             margin-bottom: 15px;
         }
 
-        /* Botões neon */
         .btn {
             padding: 12px 30px;
             border: none;
@@ -107,72 +129,29 @@
             box-shadow: 0 0 25px #ff7cf0, 0 0 40px #a179ff;
         }
 
-        /* Menu lateral */
-        nav {
-            position: fixed;
-            top: 50%;
-            right: 25px;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            z-index: 10;
-        }
-
-        nav a {
-            width: 40px;
-            height: 40px;
-            margin: 10px 0;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(161, 121, 255, 0.15);
-            color: #a179ff;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: 0.3s ease;
-        }
-
-        nav a:hover {
-            background: #a179ff;
-            color: #fff;
-            box-shadow: 0 0 15px #a179ff;
-            transform: scale(1.1);
-        }
-
-        /* Blocos de texto / Cards */
-        .text-block,
-        .project-card,
-        .skill-card {
+        /* Cards */
+        .card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             padding: 25px;
-            margin: 15px auto;
+            margin: 15px;
             transition: 0.3s ease;
-            max-width: 900px;
-        }
-
-        .project-card,
-        .skill-card {
             max-width: 500px;
         }
 
-        .project-card:hover,
-        .skill-card:hover {
+        .card:hover {
             transform: translateY(-6px) scale(1.03);
             box-shadow: 0 0 25px #a179ff;
         }
 
-        /* Habilidades */
-        .skills-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        .skills-container,
+        .projects-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 20px;
-            margin-top: 30px;
-            max-width: 1000px;
         }
 
         /* Canvas background */
@@ -187,7 +166,6 @@
             opacity: 0.15;
         }
 
-        /* Footer */
         footer {
             text-align: center;
             padding: 25px;
@@ -208,14 +186,9 @@
             transform: translateY(0);
         }
 
-        /* Responsivo */
         @media (max-width: 768px) {
-            nav {
-                right: 10px;
-            }
-
-            h1 {
-                font-size: 2.2rem;
+            nav a {
+                margin-left: 10px;
             }
 
             h2 {
@@ -228,53 +201,53 @@
 <body>
     <canvas id="codeCanvas"></canvas>
 
-    <nav>
-        <a href="#inicio">🏠</a>
-        <a href="#sobre">👤</a>
-        <a href="#habilidades">🛠️</a>
-        <a href="#projetos">🚀</a>
-        <a href="#contato">📬</a>
-    </nav>
+    <header>
+        <h1>Valmir</h1>
+        <nav>
+            <a href="#inicio">Início</a>
+            <a href="#sobre">Sobre</a>
+            <a href="#habilidades">Habilidades</a>
+            <a href="#projetos">Projetos</a>
+            <a href="#contato">Contato</a>
+        </nav>
+    </header>
 
     <section id="inicio">
-        <h1 class="fade-in">Valmir</h1>
-        <p class="fade-in">Desenvolvedor Full Stack</p>
+        <h2 class="fade-in">Desenvolvedor Full Stack</h2>
         <a href="/Curriculo_Valmir_Pereira_da_Silva.pdf" class="btn fade-in" download>📄 Baixar Currículo</a>
     </section>
 
     <section id="sobre">
         <h2>🧑‍💻 Sobre Mim</h2>
-        <div class="text-block fade-in">
+        <div class="card fade-in">
             <p>Sou um desenvolvedor Full Stack com formação pela UNINOVE (2024).</p>
             <p>Atuo aplicando conhecimentos em front-end e back-end no desenvolvimento de soluções tecnológicas, com
-                foco
-                em inovação, eficiência e escalabilidade.</p>
-            <p>Também possuo experiência sólida na área fiscal, atuando com notas fiscais e gestão de tributos. Tenho
-                perfil
-                analítico, proativo e orientado para resultados.</p>
+                foco em inovação, eficiência e escalabilidade.</p>
+            <p>Experiência sólida na área fiscal, atuando com notas fiscais e gestão de tributos. Perfil analítico,
+                proativo e orientado para resultados.</p>
         </div>
     </section>
 
     <section id="habilidades">
         <h2>🛠️ Habilidades Técnicas</h2>
         <div class="skills-container fade-in">
-            <div class="skill-card">
+            <div class="card">
                 <h3>🌐 Desenvolvimento Web</h3>
                 <p>HTML5, CSS3, JavaScript (ES6+), Bootstrap, React.js</p>
             </div>
-            <div class="skill-card">
+            <div class="card">
                 <h3>⚙️ Back-End</h3>
                 <p>PHP, Node.js, Express.js</p>
             </div>
-            <div class="skill-card">
+            <div class="card">
                 <h3>💾 Banco de Dados</h3>
                 <p>MySQL, MongoDB</p>
             </div>
-            <div class="skill-card">
+            <div class="card">
                 <h3>🛠️ Ferramentas</h3>
                 <p>Git/GitHub, VS Code, Figma, Postman</p>
             </div>
-            <div class="skill-card">
+            <div class="card">
                 <h3>📡 Outros</h3>
                 <p>APIs REST, boas práticas de versionamento e integração</p>
             </div>
@@ -283,48 +256,46 @@
 
     <section id="projetos">
         <h2>🚀 Projetos</h2>
-        <div class="project-card fade-in">
-            <a href="/calculadora.html" class="btn fade-in">🧮</a>
-            <h3>🔧 Calculadora Científica</h3>
-            <p>Projeto em HTML, CSS e JS com funções científicas como seno, cosseno, tangente, logaritmos e raiz
-                quadrada.
-            </p>
-        </div>
-        <div class="project-card fade-in">
-            <a href="/gestão.html" class="btn fade-in">⚙️</a>
-            <h3>⚙️ Gestão de Logística</h3>
-            <p>Sistema para gerenciamento de armazenamento organizado por ruas, prédios e andares.</p>
-        </div>
-        <div class="project-card fade-in">
-            <a href="/neural.html" class="btn fade-in">🫂</a>
-            <h3>🌱 Espaço de Acolhimento Emocional</h3>
-            <p>Espaço digital para apoio emocional, escuta empática e palavras de conforto.</p>
+        <div class="projects-container fade-in">
+            <div class="card">
+                <h3>🔧 Calculadora Científica</h3>
+                <p>HTML, CSS e JS com funções científicas como seno, cosseno, tangente, logaritmos e raiz quadrada.</p>
+                <a href="/calculadora.html" class="btn">Abrir Projeto</a>
+            </div>
+            <div class="card">
+                <h3>⚙️ Gestão de Logística</h3>
+                <p>Sistema para gerenciamento de armazenamento organizado por ruas, prédios e andares.</p>
+                <a href="/gestão.html" class="btn">Abrir Projeto</a>
+            </div>
+            <div class="card">
+                <h3>🌱 Espaço de Acolhimento Emocional</h3>
+                <p>Espaço digital para apoio emocional, escuta empática e palavras de conforto.</p>
+                <a href="/neural.html" class="btn">Abrir Projeto</a>
+            </div>
         </div>
     </section>
 
-<section id="contato">
-    <h2>📬 Contato</h2>
-    <div class="text-block fade-in">
-        <p>Email: <a href="mailto:valmir.pereira86@hotmail.com">valmir.pereira86@hotmail.com</a></p>
-        <p>LinkedIn: <a href="https://linkedin.com/in/valmir-silva-49ab8a26b" target="_blank">linkedin</a></p>
-        <p>GitHub: <a href="https://github.com/Valmir86/portifoliovlr" target="_blank">github</a></p>
-    </div>
-
-    <div class="text-block fade-in">
-        <h3>📨 Envie uma mensagem</h3>
-        <form action="https://formspree.io/f/mzzaoddg" method="POST"
-            style="display:flex; flex-direction:column; gap:10px;">
-            <input type="text" name="nome" placeholder="Seu nome" required
-                style="padding:12px; border-radius:12px; border:1px solid #a179ff; background: rgba(255,255,255,0.05); color:#fff;">
-            <input type="email" name="email" placeholder="Seu email" required
-                style="padding:12px; border-radius:12px; border:1px solid #a179ff; background: rgba(255,255,255,0.05); color:#fff;">
-            <textarea name="mensagem" placeholder="Sua mensagem" rows="5" required
-                style="padding:12px; border-radius:12px; border:1px solid #a179ff; background: rgba(255,255,255,0.05); color:#fff;"></textarea>
-            <button type="submit" class="btn">Enviar Mensagem</button>
-        </form>
-    </div>
-</section>
-
+    <section id="contato">
+        <h2>📬 Contato</h2>
+        <div class="card fade-in">
+            <p>Email: <a href="mailto:valmir.pereira86@hotmail.com">valmir.pereira86@hotmail.com</a></p>
+            <p>LinkedIn: <a href="https://linkedin.com/in/valmir-silva-49ab8a26b" target="_blank">linkedin</a></p>
+            <p>GitHub: <a href="https://github.com/Valmir86/portifoliovlr" target="_blank">github</a></p>
+        </div>
+        <div class="card fade-in">
+            <h3>📨 Envie uma mensagem</h3>
+            <form action="https://formspree.io/f/mzzaoddg" method="POST"
+                style="display:flex; flex-direction:column; gap:10px;">
+                <input type="text" name="nome" placeholder="Seu nome" required
+                    style="padding:12px; border-radius:12px; border:1px solid #a179ff; background: rgba(255,255,255,0.05); color:#fff;">
+                <input type="email" name="email" placeholder="Seu email" required
+                    style="padding:12px; border-radius:12px; border:1px solid #a179ff; background: rgba(255,255,255,0.05); color:#fff;">
+                <textarea name="mensagem" placeholder="Sua mensagem" rows="5" required
+                    style="padding:12px; border-radius:12px; border:1px solid #a179ff; background: rgba(255,255,255,0.05); color:#fff;"></textarea>
+                <button type="submit" class="btn">Enviar Mensagem</button>
+            </form>
+        </div>
+    </section>
 
     <footer>
         &copy; 2025 Valmir. Todos os direitos reservados.
@@ -368,9 +339,7 @@
                     entry.target.classList.add('visible');
                 }
             });
-        }, {
-            threshold: 0.2
-        });
+        }, { threshold: 0.2 });
         observers.forEach(el => observer.observe(el));
     </script>
 </body>
