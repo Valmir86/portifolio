@@ -2,358 +2,252 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valmir | Desenvolvedor Full Stack</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-    <style>
-        /* Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        html {
-            scroll-behavior: smooth;
-        }
+<title>Valmir Silva | Full Stack Engineer</title>
 
-        body {
-            font-family: 'Fira Code', monospace;
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #0f0c29);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #ccc;
-            overflow-x: hidden;
-        }
-
-        @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* Menu superior */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            z-index: 100;
-        }
-
-        header h1 {
-            font-size: 1.5rem;
-            background: linear-gradient(90deg, #a179ff, #ff7cf0, #a179ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        nav a {
-            margin-left: 20px;
-            text-decoration: none;
-            color: #fff;
-            font-weight: 600;
-            position: relative;
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -3px;
-            left: 0;
-            background-color: #a179ff;
-            transition: width 0.3s;
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        /* Seções */
-        section {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 100px 20px 60px;
-            position: relative;
-        }
-
-        h2 {
-            font-size: 2rem;
-            color: #a179ff;
-            margin-bottom: 20px;
-            text-shadow: 0 0 12px #a179ff, 0 0 22px #7049e1;
-        }
-
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 50px;
-            background: linear-gradient(90deg, #8e67f7, #ff7cf0);
-            color: #fff;
-            font-weight: 600;
-            text-decoration: none;
-            margin-top: 15px;
-            transition: 0.3s ease;
-            box-shadow: 0 0 10px #a179ff, 0 0 25px #7049e1;
-        }
-
-        .btn:hover {
-            transform: scale(1.07);
-            box-shadow: 0 0 25px #ff7cf0, 0 0 40px #a179ff;
-        }
-
-        /* Cards */
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            backdrop-filter: blur(12px);
-            padding: 25px;
-            margin: 15px;
-            transition: 0.3s ease;
-            max-width: 500px;
-        }
-
-        .card:hover {
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 0 25px #a179ff;
-        }
-
-        .skills-container,
-        .projects-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        /* Canvas background */
-        #codeCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.15;
-        }
-
-        footer {
-            text-align: center;
-            padding: 25px;
-            color: #888;
-            font-size: 0.9rem;
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        /* Fade in */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease, transform 1s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @media (max-width: 768px) {
-            nav a {
-                margin-left: 10px;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+<meta name="description" content="Valmir Silva - Desenvolvedor Full Stack especializado em aplicações web modernas, escaláveis e de alta performance.">
+<meta name="author" content="Valmir Silva">
+<meta name="keywords" content="Full Stack Developer, Desenvolvedor Web, React, Node.js, JavaScript, São Paulo, Engenheiro de Software">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <canvas id="codeCanvas"></canvas>
 
-    <header>
-        <h1>Valmir</h1>
-    
-        <nav>
-            <a href="#inicio">Início</a>
-            <a href="#sobre">Sobre</a>
-            <a href="#habilidades">Habilidades</a>
-            <a href="#projetos">Projetos</a>
-            <a href="#contato">Contato</a>
-        </nav>
-        <img src="/Fireflytecnologia0.jpg" alt="Valmir"
-            style="width:50px; height:50px; border-radius:50%; border:2px solid #a179ff;">
-    </header>
+<header>
+<h1>Valmir Silva</h1>
+<nav aria-label="Menu principal">
+<a href="#sobre">Sobre</a>
+<a href="#habilidades">Habilidades</a>
+<a href="#projetos">Projetos</a>
+<a href="#contato">Contato</a>
+</nav>
+</header>
 
-    <section id="inicio">
-        <h2 class="fade-in">Desenvolvedor Full Stack</h2>
-        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;" class="fade-in">
-            <a href="/Curriculo_Valmir_Pereira_da_Silva.pdf" class="btn" download>📄 Baixar Currículo</a>
-            <img src="/WhatsAppImage2024-08-22at15.05.01.jpeg" alt="Valmir"
-                style="width:350px; height:350px; border-radius:50%; border:2px solid #a179ff;">
-        </div>
-    </section>
+<main>
 
-    <section id="sobre">
-        <h2>🧑‍💻 Sobre Mim</h2>
-        <div class="card fade-in">
-            <p>Sou um desenvolvedor Full Stack com formação pela UNINOVE (2024).</p>
-            <p>Atuo aplicando conhecimentos em front-end e back-end no desenvolvimento de soluções tecnológicas, com
-                foco em inovação, eficiência e escalabilidade.</p>
-            <p>Experiência sólida na área fiscal, atuando com notas fiscais e gestão de tributos. Perfil analítico,
-                proativo e orientado para resultados.</p>
-        </div>
-    </section>
+<section id="inicio">
+<div class="hero-text">
+<h2>Full Stack Engineer</h2>
+<p class="typing" id="typing"></p>
 
-    <section id="habilidades">
-        <h2>🛠️ Habilidades Técnicas</h2>
-        <div class="skills-container fade-in">
-            <div class="card">
-                <h3>🌐 Desenvolvimento Web</h3>
-                <p>HTML5, CSS3, JavaScript (ES6+), Bootstrap, React.js</p>
-            </div>
-            <div class="card">
-                <h3>⚙️ Back-End</h3>
-                <p>PHP, Node.js, Express.js</p>
-            </div>
-            <div class="card">
-                <h3>💾 Banco de Dados</h3>
-                <p>MySQL, MongoDB</p>
-            </div>
-            <div class="card">
-                <h3>🛠️ Ferramentas</h3>
-                <p>Git/GitHub, VS Code, Figma, Postman</p>
-            </div>
-            <div class="card">
-                <h3>📡 Outros</h3>
-                <p>APIs REST, boas práticas de versionamento e integração</p>
-            </div>
-        </div>
-    </section>
+<a href="/Curriculo_Valmir_Pereira_da_Silva.pdf" class="btn" download>
+Baixar Currículo
+</a>
 
-    <section id="projetos">
-        <h2>🚀 Projetos</h2>
-        <div class="projects-container fade-in">
-            <div class="card">
-                <h3>🔧 Calculadora Científica</h3>
-                <p>HTML, CSS e JS com funções científicas como seno, cosseno, tangente, logaritmos e raiz quadrada.</p>
-                <a href="/calculadora.html" class="btn">Abrir Projeto</a>
-            </div>
-            <div class="card">
-                <h3>⚙️ Gestão de Logística</h3>
-                <p>Sistema para gerenciamento de armazenamento organizado por ruas, prédios e andares.</p>
-                <a href="/gestão.html" class="btn">Abrir Projeto</a>
-            </div>
-            <div class="card">
-                <h3>🌱 Espaço de Acolhimento Emocional</h3>
-                <p>Espaço digital para apoio emocional, escuta empática e palavras de conforto.</p>
-                <a href="/neural.html" class="btn">Abrir Projeto</a>
-            </div>
-        </div>
-    </section>
+<a href="#projetos" class="btn">
+Ver Projetos
+</a>
+</div>
 
-    <section id="contato">
-        <h2>📬 Contato</h2>
-        <div class="card fade-in">
-            <p>Email: <a href="mailto:valmir.pereira86@hotmail.com">valmir.pereira86@hotmail.com</a></p>
-            <p>LinkedIn: <a href="https://linkedin.com/in/valmir-silva-49ab8a26b" target="_blank">linkedin</a></p>
-            <p>GitHub: <a href="https://github.com/Valmir86/portifoliovlr" target="_blank">github</a></p>
-            
-        </div>
-        <div class="card fade-in">
-            <h3>📨 Envie uma mensagem</h3>
-            <form action="https://formspree.io/f/mzzaoddg" method="POST"
-                style="display:flex; flex-direction:column; gap:10px;">
-                <input type="text" name="nome" placeholder="Seu nome" required
-                    style="padding:12px; border-radius:12px; border:1px solid #a179ff; background: rgba(255,255,255,0.05); color:#fff;">
-                <input type="email" name="email" placeholder="Seu email" required
-                    style="padding:12px; border-radius:12px; border:1px solid #a179ff; background: rgba(255,255,255,0.05); color:#fff;">
-                <textarea name="mensagem" placeholder="Sua mensagem" rows="5" required
-                    style="padding:12px; border-radius:12px; border:1px solid #a179ff; background: rgba(255,255,255,0.05); color:#fff;"></textarea>
-                <button type="submit" class="btn">Enviar Mensagem</button>
-            </form>
-            <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;" class="fade-in">
-                <img src="/Fireflytecnologia0.jpg" alt="Valmir"
-                    style="width:350px; height:350px; border-radius:50%; border:2px solid #a179ff;">
-            </div>
-        </div>
-    </section>
+<div class="hero-img" id="tilt">
+<img src="/valmir.jpg" alt="Foto profissional de Valmir Silva - Desenvolvedor Full Stack">
+</div>
+</section>
 
-    <footer>
-        &copy; 2025 Valmir. Todos os direitos reservados.
-    </footer>
+<section id="sobre">
+<h2>Sobre Mim</h2>
 
-    <script>
-        // Efeito Matrix
-        const canvas = document.getElementById('codeCanvas');
-        const ctx = canvas.getContext('2d');
-        let w, h, cols, drops;
+<div class="card" style="max-width:900px;margin:auto;text-align:left;line-height:1.8;">
 
-        function setup() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-            cols = Math.floor(w / 20);
-            drops = [];
-            for (let i = 0; i < cols; i++) drops[i] = Math.floor(Math.random() * h / 20);
-        }
+<p>
+Sou <strong>Desenvolvedor Full Stack</strong> com formação em Análise e Desenvolvimento de Sistemas,
+especializado na criação de aplicações web modernas com foco em
+<strong>performance, escalabilidade e arquitetura limpa</strong>.
+</p>
 
-        function draw() {
-            ctx.fillStyle = 'rgba(15,12,41,0.1)';
-            ctx.fillRect(0, 0, w, h);
-            ctx.fillStyle = '#a179ff';
-            ctx.font = '18px "Fira Code", monospace';
-            for (let i = 0; i < drops.length; i++) {
-                const t = Math.random() > 0.5 ? '0' : '1';
-                ctx.fillText(t, i * 20, drops[i] * 20);
-                if (drops[i] * 20 > h && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        window.addEventListener('resize', setup);
-        setup();
-        setInterval(draw, 60);
+<p>
+Atuo desde o frontend até o backend, estruturando APIs, bancos de dados
+e ambientes de produção com boas práticas de engenharia de software.
+</p>
 
-        // Animações de scroll
-        const observers = document.querySelectorAll('.fade-in');
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.2 });
-        observers.forEach(el => observer.observe(el));
-    </script>
+<h3 style="margin-top:25px;margin-bottom:10px;">Principais práticas:</h3>
+
+<ul style="margin-left:20px;">
+<li>✔ Arquitetura modular e código organizado</li>
+<li>✔ Integração com APIs REST</li>
+<li>✔ Versionamento com Git</li>
+<li>✔ Modelagem de banco relacional e não relacional</li>
+<li>✔ Otimização de performance e responsividade</li>
+</ul>
+
+<p style="margin-top:20px;">
+Busco constantemente evoluir como Engenheiro de Software,
+participando de projetos desafiadores com foco em soluções cloud,
+arquitetura escalável e desenvolvimento orientado a produto.
+</p>
+
+</div>
+</section>
+
+<section id="habilidades">
+<h2>Habilidades Técnicas</h2>
+
+<div class="grid">
+<div class="card">
+<h3>Frontend</h3>
+<p>React, JavaScript, HTML5, CSS3</p>
+</div>
+
+<div class="card">
+<h3>Backend</h3>
+<p>Node.js, PHP, Express</p>
+</div>
+
+<div class="card">
+<h3>Banco de Dados</h3>
+<p>MySQL, MongoDB</p>
+</div>
+
+<div class="card">
+<h3>Cloud & Deploy</h3>
+<p>Vercel, GitHub</p>
+</div>
+</div>
+</section>
+
+<section id="projetos">
+    <h2>Projetos em Destaque</h2>
+
+    <div class="grid">
+
+        <!-- DriveFast -->
+        <article class="card">
+            <img src="/fast_drive.jpg" class="project-img" alt="Projeto DriveFast">
+
+            <h3>DriveFast</h3>
+
+            <p>
+                Sistema inteligente de cotação para motorista particular com cálculo automático por KM,
+                integração com WhatsApp e estrutura escalável.
+            </p>
+
+            <a href="https://drivefast.vercel.app/" target="_blank" class="btn">
+                Acessar Projeto
+            </a>
+        </article>
+
+
+       
+
+        <!-- Sistema Hospitalar -->
+        <article class="card">
+            <img src="/hospital.jpg" class="project-img" alt="Sistema Hospitalar Futurista">
+
+            <h3>Sistema Hospitalar Futurista</h3>
+
+            <p>
+                Dashboard moderno com cadastro de pacientes,
+                controle de consultas, leitos e gestão médica.
+                Interface tecnológica inspirada em sistemas corporativos.
+            </p>
+
+            <a href="#" class="btn">
+                Ver Projeto
+            </a>
+        </article>
+
+
+
+
+        <!-- Flash Box -->
+        <article class="card">
+            <img src="/flashbox.jpg" class="project-img" alt="Flash Box E-commerce">
+
+            <h3>Flash Box</h3>
+
+            <p>
+                Marketplace estilo Shopee com sistema de vendas,
+                gestão de usuários e layout moderno focado em performance.
+            </p>
+
+            <a href="#" class="btn">
+                Ver Projeto
+            </a>
+        </article>
+
+    </div>
+</section>
+<section id="contato">
+<h2>Contato</h2>
+
+<div class="card" style="max-width:500px;margin:auto;">
+
+<p>Email: 
+<a href="mailto:valmir.pereira86@hotmail.com">
+valmir.pereira86@hotmail.com
+</a>
+</p>
+
+<p>LinkedIn:
+<a href="https://linkedin.com/in/valmir-silva-49ab8a26b" target="_blank">
+linkedin.com/in/valmir-silva-49ab8a26b
+</a>
+</p>
+
+<p>GitHub:
+<a href="https://github.com/Valmir86" target="_blank">
+github.com/Valmir86
+</a>
+</p>
+
+</div>
+</section>
+
+</main>
+
+<footer>
+
+<div class="footer-grid">
+
+<div class="footer-col">
+<h4>Sobre</h4>
+<p>Construindo soluções digitais modernas com foco em performance e escalabilidade.</p>
+</div>
+
+<div class="footer-col">
+<h4>Projetos</h4>
+<a href="https://drivefast.vercel.app/" target="_blank">DriveFast</a>
+</div>
+
+<div class="footer-col">
+<h4>Localização</h4>
+<p>São Paulo - Brasil</p>
+<p>Disponível para oportunidades remotas e presenciais</p>
+</div>
+
+</div>
+
+<div class="footer-bottom">
+© 2025 Valmir Silva — Full Stack Engineer
+</div>
+
+</footer>
+
+<script>
+const text="Building scalable systems and high-performance web applications.";
+let i=0;
+function typing(){
+if(i<text.length){
+document.getElementById("typing").innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,35);
+}}
+typing();
+
+const tilt=document.getElementById("tilt");
+tilt.addEventListener("mousemove",(e)=>{
+const x=(window.innerWidth/2-e.pageX)/30;
+const y=(window.innerHeight/2-e.pageY)/30;
+tilt.style.transform=`rotateY(${x}deg) rotateX(${y}deg)`;
+});
+tilt.addEventListener("mouseleave",()=>{
+tilt.style.transform="rotateY(0) rotateX(0)";
+});
+</script>
+
 </body>
-
 </html>
