@@ -1,42 +1,700 @@
-/* ========================= DARK MODE MANUAL ========================= */
-
-body.dark{
-    background:linear-gradient(135deg,#0f111a,#1a1c2e);
-    color:#f1f1f1;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espaço Terapêutico | Acolhimento Psicológico</title>
+<style>
+/* ========================= RESET MODERNO ========================= */
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body.dark .box{
-    background:rgba(25,25,35,0.7);
+:root{
+    --primary:#6A5ACD;
+    --primary-dark:#4c3fb3;
+    --secondary:#836FFF;
+    --bg-light:#f4f6ff;
+    --glass:rgba(255,255,255,0.65);
+    --border:rgba(255,255,255,0.3);
+    --text-dark:#2c2c2c;
 }
 
-body.dark .chat-box{
-    background:rgba(30,30,45,0.6);
+html{
+    scroll-behavior:smooth;
 }
 
-body.dark .bot-message{
-    background:#1f2235;
-    color:#f1f1f1;
+body{
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg,#eef2ff,#f7f9ff);
+    color:var(--text-dark);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
 }
 
-body.dark select,
-body.dark textarea{
-    background:#1f2235;
-    color:#fff;
-    border:1px solid #333;
+/* ========================= HEADER PREMIUM ========================= */
+header{
+    background: linear-gradient(120deg,var(--primary),var(--secondary));
+    color:white;
+    text-align:center;
+    padding:60px 20px;
+    position:relative;
+    overflow:hidden;
 }
 
-body.dark footer{
-    background:linear-gradient(120deg,#0f111a,#15172a);
+header::after{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    background:rgba(255,255,255,0.15);
+    filter:blur(80px);
+    top:-100px;
+    right:-100px;
+    border-radius:50%;
 }
 
-/* Botão ativo */
-#themeToggle{
-    background:transparent;
-    border:2px solid var(--primary);
+header h1{
+    font-size:clamp(22px,4vw,34px);
+    font-weight:600;
+    letter-spacing:1px;
+}
+
+header p{
+    margin-top:10px;
+    opacity:.9;
+}
+
+/* ========================= NAV MODERNO ========================= */
+nav{
+    backdrop-filter: blur(12px);
+    background:var(--glass);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    padding:15px;
+    flex-wrap:wrap;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+nav button{
+    padding:10px 22px;
+    border-radius:40px;
+    border:none;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:.4s ease;
+}
+
+nav button:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 25px rgba(106,90,205,.4);
+}
+
+/* ========================= SECTIONS ========================= */
+section{
+    display:none;
+    padding:80px 20px;
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+    animation:fadeUp .6s ease;
+}
+
+section.active{
+    display:block;
+}
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(40px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+/* ========================= CARD / BOX GLASS ========================= */
+.box{
+    background:var(--glass);
+    backdrop-filter:blur(18px);
+    border:1px solid var(--border);
+    padding:40px;
+    border-radius:25px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.08);
+}
+
+/* ========================= CHAT ESTILO APP ========================= */
+.chat-box{
+    height:350px;
+    overflow-y:auto;
+    padding:20px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.4);
+    margin-bottom:20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.user-message{
+    align-self:flex-end;
+    background:linear-gradient(135deg,#6A5ACD,#836FFF);
+    color:white;
+    padding:10px 16px;
+    border-radius:20px 20px 5px 20px;
+    max-width:75%;
+    font-size:14px;
+    animation:fadeUp .3s ease;
+}
+
+.bot-message{
+    align-self:flex-start;
+    background:white;
+    padding:10px 16px;
+    border-radius:20px 20px 20px 5px;
+    max-width:75%;
+    font-size:14px;
+    box-shadow:0 5px 15px rgba(0,0,0,.05);
+}
+
+/* ========================= INPUT AREA ========================= */
+.input-area{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+select,
+textarea{
+    flex:1;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #ddd;
+    font-family:inherit;
+    transition:.3s;
+}
+
+textarea{
+    resize:none;
+}
+
+select:focus,
+textarea:focus{
+    outline:none;
+    border-color:var(--primary);
+    box-shadow:0 0 10px rgba(106,90,205,.3);
+}
+
+button.send{
+    padding:12px 25px;
+    border-radius:12px;
+    border:none;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:white;
+    cursor:pointer;
+    transition:.3s;
+    font-weight:600;
+}
+
+button.send:hover{
+    transform:scale(1.05);
+    box-shadow:0 10px 25px rgba(106,90,205,.4);
+}
+
+/* ========================= SOBRE & CONTATO ========================= */
+#sobre .box,
+#contato .box{
+    line-height:1.8;
+}
+
+#sobre h2,
+#contato h2{
+    text-align:center;
+    margin-bottom:25px;
+    font-size:clamp(22px,3vw,30px);
+    color:var(--primary-dark);
+}
+
+#sobre p,
+#contato p{
+    margin-bottom:18px;
+    font-size:16px;
+}
+
+.destaque{
+    font-weight:bold;
+    text-align:center;
+    margin-top:20px;
     color:var(--primary);
 }
 
-#themeToggle:hover{
-    background:var(--primary);
+/* ========================= FOOTER PREMIUM ========================= */
+footer{
+    margin-top:auto;
+    background:linear-gradient(120deg,#1f1f2e,#2b2b3c);
     color:white;
+    padding:60px 20px;
 }
+
+.footer-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:40px;
+}
+
+footer h3{
+    margin-bottom:10px;
+    color:#9c8cff;
+}
+
+.copy{
+    text-align:center;
+    margin-top:40px;
+    opacity:.6;
+    font-size:13px;
+}
+
+/* ========================= RESPONSIVIDADE AVANÇADA ========================= */
+@media(max-width:768px){
+
+    header{
+        padding:40px 15px;
+    }
+
+    section{
+        padding:50px 15px;
+    }
+
+    .box{
+        padding:25px;
+        border-radius:20px;
+    }
+
+    nav{
+        gap:10px;
+    }
+
+    nav button{
+        width:100%;
+        max-width:250px;
+    }
+
+    .chat-box{
+        height:280px;
+    }
+}
+/* ========================= DARK MODE AUTOMÁTICO ========================= */
+@media (prefers-color-scheme: dark){
+
+    :root{
+        --bg-light:#0f111a;
+        --glass:rgba(25,25,35,0.6);
+        --border:rgba(255,255,255,0.08);
+        --text-dark:#f1f1f1;
+    }
+
+    body{
+        background:linear-gradient(135deg,#0f111a,#1a1c2e);
+        color:#f1f1f1;
+    }
+
+    .box{
+        background:rgba(25,25,35,0.7);
+    }
+
+    .chat-box{
+        background:rgba(30,30,45,0.6);
+    }
+
+    .bot-message{
+        background:#1f2235;
+        color:#f1f1f1;
+    }
+
+    select, textarea{
+        background:#1f2235;
+        color:#fff;
+        border:1px solid #333;
+    }
+
+    footer{
+        background:linear-gradient(120deg,#0f111a,#15172a);
+    }
+}
+/* ========================= PARTÍCULAS ========================= */
+
+.particles{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:-1;
+    overflow:hidden;
+}
+
+.particles span{
+    position:absolute;
+    display:block;
+    width:8px;
+    height:8px;
+    background:rgba(106,90,205,0.25);
+    border-radius:50%;
+    animation:float 20s linear infinite;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(100vh) scale(0.5);
+        opacity:0;
+    }
+    10%{opacity:1;}
+    to{
+        transform:translateY(-10vh) scale(1.2);
+        opacity:0;
+    }
+}
+
+</style>
+</head>
+<body>
+<div class="particles"></div>
+<header>
+<h1>Espaço Terapêutico de Acolhimento Psicológico</h1>
+<p>Um ambiente seguro para expressar sentimentos e buscar apoio emocional</p>
+</header>
+
+<nav>
+<button onclick="showSection('inicio')">Início</button>
+<button onclick="showSection('sobre')">Sobre Psicologia</button>
+<button onclick="showSection('contato')">Contato & Apoio</button>
+
+</nav>
+
+<!-- ================= INICIO ================= -->
+<section id="inicio" class="active">
+<div class="box">
+<h2>Como você está se sentindo hoje?</h2>
+
+<div class="chat-box" id="chat-box">
+<div class="bot-message">Olá 🌿 Estou aqui para acolher você. Escreva o que está sentindo.</div>
+</div>
+
+<div class="input-area">
+<select id="sentimento">
+<option value="">Selecione seu sentimento</option>
+<option value="triste">😢 Tristeza</option>
+<option value="dor">💔 Dor</option>
+<option value="luto">🖤 Luto</option>
+<option value="arrependimento">😔 Arrependimento</option>
+<option value="cansaco">😩 Cansaço</option>
+<option value="raiva">😡 Raiva</option>
+<option value="depressao">🌧 Sentimento de Depressão</option>
+</select>
+
+<textarea id="pergunta" rows="3"
+placeholder="Escreva aqui o que está passando no seu coração..."></textarea>
+
+<button class="send" onclick="responder()">Enviar Mensagem</button>
+</div>
+</div>
+</section>
+
+<!-- ================= SOBRE ================= -->
+<section id="sobre">
+    <div class="box">
+        <h2>Sobre Psicologia e Acolhimento</h2></br>
+
+        <p>
+            A Psicologia é a ciência que estuda o comportamento humano, as emoções, os pensamentos e os processos mentais que influenciam a forma como cada pessoa percebe e interage com o mundo. 
+            Mais do que compreender sentimentos, a psicologia busca promover saúde emocional, equilíbrio e qualidade de vida.
+        </p>
+
+        <p>
+            Ao longo da vida, todos enfrentam desafios internos: momentos de tristeza, perdas significativas, conflitos, inseguranças, frustrações e dúvidas. 
+            Esses estados emocionais não representam fraqueza — fazem parte da experiência humana. 
+            A psicologia atua justamente na compreensão desses processos, oferecendo ferramentas para lidar com as dificuldades de forma mais saudável e consciente.
+        </p>
+
+        <p>
+            O acompanhamento psicológico proporciona um espaço seguro e confidencial, onde o indivíduo pode expressar livremente seus pensamentos e emoções sem julgamentos. 
+            A escuta ativa, a empatia e a validação dos sentimentos são pilares fundamentais desse processo. 
+            Quando alguém é ouvido com respeito e acolhimento, inicia-se um caminho de autoconhecimento e transformação.
+        </p>
+
+        <p>
+            Além do tratamento de transtornos como ansiedade, depressão e estresse, a psicologia também contribui para o desenvolvimento pessoal, fortalecimento da autoestima, melhoria de relacionamentos e construção de hábitos emocionais mais equilibrados. 
+            O objetivo não é eliminar as emoções difíceis, mas aprender a compreendê-las, aceitá-las e integrá-las de maneira saudável.
+        </p>
+
+        <p>
+            Buscar ajuda psicológica é um ato de coragem e responsabilidade consigo mesmo. 
+            Cuidar da saúde mental é tão importante quanto cuidar da saúde física. 
+            Investir no próprio bem-estar emocional é investir em uma vida mais consciente, leve e significativa.
+        </p>
+
+        <p class="destaque">
+            Buscar ajuda é um ato de coragem e autocuidado.
+        </p>
+    </div>
+</section>
+
+<!-- ================= CONTATO ================= -->
+<section id="contato">
+    <div class="box">
+
+        <h2>Autoajuda e Apoio Profissional</h2>
+
+        <p>
+            Cuidar da saúde emocional é um passo importante para uma vida mais equilibrada e consciente. 
+            Em momentos de angústia, tristeza profunda, ansiedade intensa ou pensamentos difíceis, 
+            buscar apoio é fundamental.
+        </p>
+
+        <p>
+            Caso esteja passando por uma situação urgente ou precise conversar imediatamente com alguém, 
+            você pode entrar em contato com serviços especializados que oferecem escuta acolhedora e gratuita.
+        </p>
+
+        <hr>
+
+        <p><strong>CVV – Centro de Valorização da Vida</strong></p>
+        <p><strong>Telefone:</strong> 188 (24 horas – gratuito em todo o Brasil)</p>
+        <p><strong>Site:</strong> https://www.cvv.org.br</p>
+
+        <p>
+            O atendimento do CVV é voluntário, anônimo e totalmente confidencial. 
+            Você pode ligar a qualquer hora do dia ou da noite para conversar com alguém preparado para ouvir 
+            sem julgamentos.
+        </p>
+
+        <hr>
+
+        <p>
+            Se preferir acompanhamento contínuo, considere procurar um psicólogo ou profissional da saúde mental 
+            da sua confiança. O apoio profissional pode auxiliar no desenvolvimento do autoconhecimento, 
+            no fortalecimento emocional e na construção de estratégias para enfrentar desafios da vida.
+        </p>
+
+        <p class="destaque">
+            Você não precisa enfrentar tudo sozinho(a). Buscar ajuda é um ato de coragem.
+        </p>
+    </div>
+</section>
+<footer>
+<div class="footer-grid">
+<div><h3>Missão</h3><p>Oferecer espaço seguro de acolhimento.</p></div>
+<div><h3>Importante</h3><p>Não substitui acompanhamento profissional.</p></div>
+<div><h3>Autocuidado</h3><p>Respeite seus limites emocionais.</p></div>
+</div>
+<div class="copy">© 2026 Espaço Terapêutico</div>
+</footer>
+
+<script>
+
+/* =====================================================
+   CONFIGURAÇÕES GERAIS
+===================================================== */
+
+const chat = document.getElementById("chat-box");
+const inputPergunta = document.getElementById("pergunta");
+const selectSentimento = document.getElementById("sentimento");
+
+let historico = []; // memória simples da conversa
+
+/* =====================================================
+   NAVEGAÇÃO ENTRE SEÇÕES
+===================================================== */
+
+function showSection(id){
+
+    document.querySelectorAll("section").forEach(sec=>{
+        sec.classList.remove("active");
+    });
+
+    const target = document.getElementById(id);
+    if(target){
+        target.classList.add("active");
+        window.scrollTo({ top:0, behavior:"smooth" });
+    }
+}
+
+/* =====================================================
+   BANCO DE RESPOSTAS
+===================================================== */
+
+const respostas = {
+    triste:[
+        "Eu sinto muito que esteja se sentindo assim.",
+        "A tristeza também passa, mesmo que pareça longa.",
+        "Permita-se sentir sem se julgar.",
+        "Você merece acolhimento.",
+        "Dias difíceis não definem quem você é."
+    ],
+    dor:[
+        "Sua dor é válida.",
+        "Você não precisa enfrentar isso sozinho.",
+        "Descansar também é coragem.",
+        "Eu estou aqui com você.",
+        "Você é importante."
+    ],
+    luto:[
+        "O luto tem seu próprio tempo.",
+        "Honrar memórias é uma forma de amor.",
+        "É permitido sentir saudade.",
+        "Chorar também é amor.",
+        "Seu tempo emocional é único."
+    ],
+    arrependimento:[
+        "Errar faz parte do crescimento.",
+        "Sempre existe um novo começo.",
+        "Você pode aprender com isso.",
+        "Perdoar-se é libertador.",
+        "Recomeçar é possível."
+    ],
+    cansaco:[
+        "Você não precisa dar conta de tudo.",
+        "Respeite seus limites.",
+        "Pausa também é produtividade emocional.",
+        "Respire fundo.",
+        "Cuide de você."
+    ],
+    raiva:[
+        "Reconhecer a raiva já é maturidade.",
+        "Respire antes de reagir.",
+        "Sua emoção é válida.",
+        "Transforme isso em força consciente.",
+        "Você consegue lidar com isso."
+    ],
+    depressao:[
+        "Seu sofrimento é real.",
+        "Você não está sozinho.",
+        "Pequenos passos importam.",
+        "Existe esperança.",
+        "Buscar ajuda é coragem."
+    ]
+};
+
+/* =====================================================
+   UTILITÁRIOS
+===================================================== */
+
+function respostaAleatoria(lista){
+    return lista[Math.floor(Math.random() * lista.length)];
+}
+
+function detectarEmergencia(texto){
+    const padrao = /(morrer|me matar|acabar com tudo|quero sumir|não aguento|tirar minha vida)/i;
+    return padrao.test(texto);
+}
+
+function adicionarMensagem(texto, classe){
+    const msg = document.createElement("div");
+    msg.className = classe;
+    msg.innerText = texto;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+    return msg;
+}
+
+function efeitoDigitacao(elemento, texto, velocidade=20){
+    elemento.innerText = "";
+    let i = 0;
+
+    function digitar(){
+        if(i < texto.length){
+            elemento.innerText += texto.charAt(i);
+            i++;
+            chat.scrollTop = chat.scrollHeight;
+            setTimeout(digitar, velocidade);
+        }
+    }
+
+    digitar();
+}
+
+/* =====================================================
+   FUNÇÃO PRINCIPAL
+===================================================== */
+
+function responder(){
+
+    const sentimento = selectSentimento.value;
+    const perguntaOriginal = inputPergunta.value.trim();
+    const pergunta = perguntaOriginal.toLowerCase();
+
+    if(!sentimento && !pergunta) return;
+
+    // Mensagem usuário
+    adicionarMensagem("🧍 Você: " + (perguntaOriginal || sentimento), "user-message");
+
+    historico.push(perguntaOriginal || sentimento);
+
+    let respostaFinal;
+
+    if(detectarEmergencia(pergunta)){
+        respostaFinal = "Se você estiver em risco imediato, ligue 188 (CVV 24h – gratuito). Você é importante 🤍";
+    }
+    else if(sentimento && respostas[sentimento]){
+        respostaFinal = respostaAleatoria(respostas[sentimento]);
+    }
+    else if(pergunta.includes("sozinho")){
+        respostaFinal = "Sentir-se sozinho dói muito. Você merece apoio e conexão.";
+    }
+    else if(pergunta.includes("medo")){
+        respostaFinal = "O medo é uma resposta natural. Vamos respirar juntos por um momento.";
+    }
+    else{
+        respostaFinal = "Obrigado por compartilhar. Estou aqui com você. 💜";
+    }
+
+    // Indicador digitando
+    const typing = adicionarMensagem("🤍 Acolhimento está digitando...", "bot-message");
+
+    setTimeout(()=>{
+
+        typing.remove();
+
+        const botMsg = document.createElement("div");
+        botMsg.className = "bot-message";
+        chat.appendChild(botMsg);
+
+        efeitoDigitacao(botMsg, "🤍 Acolhimento: " + respostaFinal, 20);
+
+    }, 900);
+
+    inputPergunta.value = "";
+    selectSentimento.value = "";
+}
+
+/* =====================================================
+   PARTÍCULAS FLUTUANTES SEGURAS
+===================================================== */
+
+document.addEventListener("DOMContentLoaded", ()=>{
+
+    const particlesContainer = document.querySelector(".particles");
+
+    if(particlesContainer){
+        for(let i=0;i<25;i++){
+            const span = document.createElement("span");
+            span.style.left = Math.random()*100 + "vw";
+            span.style.animationDuration = (15 + Math.random()*15) + "s";
+            span.style.width = span.style.height = (4 + Math.random()*6) + "px";
+            particlesContainer.appendChild(span);
+        }
+    }
+
+    showSection("inicio");
+});
+
+</script>
+</body>
+</html>
