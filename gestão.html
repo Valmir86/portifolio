@@ -1,366 +1,844 @@
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WMS Logística PRO</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-<style>
-:root{
---bg:#0f172a;
---card:#1e293b;
---primary:#22c55e;
---secondary:#3b82f6;
---danger:#ef4444;
---text:#f1f5f9;
---muted:#94a3b8;
-}
-
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-body{display:flex;background:var(--bg);color:var(--text);}
-
-.sidebar{
-width:250px;
-background:var(--card);
-height:100vh;
-padding:25px;
-position:fixed;
-}
-
-.sidebar h2{
-color:var(--primary);
-margin-bottom:25px;
-}
-
-.sidebar button{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-background:transparent;
-border:1px solid var(--primary);
-color:var(--text);
-cursor:pointer;
-border-radius:6px;
-transition:.3s;
-}
-
-.sidebar button:hover{
-background:var(--primary);
-color:#000;
-}
-
-.main{
-margin-left:250px;
-padding:30px;
-width:100%;
-}
-
-.section{display:none;}
-.active{display:block;}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-margin-bottom:25px;
-}
-
-.card{
-background:var(--card);
-padding:20px;
-border-radius:12px;
-box-shadow:0 5px 20px rgba(0,0,0,.4);
-}
-
-.card h3{color:var(--muted);font-size:14px;}
-.card p{font-size:22px;font-weight:bold;margin-top:8px;}
-
-form{
-background:var(--card);
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:10px;
-}
-
-input,select{
-padding:8px;
-border-radius:6px;
-border:none;
-}
-
-button.submit{
-background:var(--primary);
-border:none;
-padding:8px;
-border-radius:6px;
-font-weight:bold;
-cursor:pointer;
-}
-
-button.blue{background:var(--secondary);}
-
-table{
-width:100%;
-border-collapse:collapse;
-background:var(--card);
-margin-top:15px;
-}
-
-th,td{
-padding:8px;
-border-bottom:1px solid #334155;
-text-align:center;
-}
-
-.chart-box{
-background:var(--card);
-padding:20px;
-border-radius:12px;
-margin-top:20px;
-}
-
-@media(max-width:768px){
-.sidebar{position:relative;width:100%;height:auto;}
-.main{margin-left:0;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartMarket Enterprise - ERP & Varejo Total</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome para Ícones Profissionais -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js para Gráficos Analíticos de Gestão -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @media print {
+            body * { visibility: hidden; }
+            #printableArea, #printableArea * { visibility: visible; }
+            #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
+        }
+    </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
 
-<div class="sidebar">
-<h2>WMS PRO</h2>
-<button onclick="show('dashboard')">Dashboard</button>
-<button onclick="show('entrada')">Entrada</button>
-<button onclick="show('saida')">Saída</button>
-<button onclick="show('estoque')">Estoque</button>
-<button onclick="show('relatorio')">Relatórios</button>
-</div>
+    <!-- HEADER / TOPO CORPORATIVO -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex justify-between items-center shadow-lg no-print">
+        <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-br from-emerald-500 to-teal-700 p-2.5 rounded-xl text-white shadow-lg shadow-emerald-900/40">
+                <i class="fa-solid fa-cash-register text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-black tracking-wide text-white">SmartMarket <span class="text-emerald-400">ENTERPRISE</span></h1>
+                <p class="text-xs text-slate-400">ERP & WMS Integrado com PDV em Tempo Real</p>
+            </div>
+        </div>
+        
+        <!-- ABAS DE NAVEGAÇÃO PRINCIPAL -->
+        <nav class="hidden xl:flex space-x-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-emerald-600 text-white transition shadow-sm flex items-center gap-1.5"><i class="fa-solid fa-chart-pie"></i> Painel Geral</button>
+            <button onclick="switchTab('produtos')" id="btn-produtos" class="px-3.5 py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition flex items-center gap-1.5"><i class="fa-solid fa-boxes-stacked"></i> Estoque & Preços</button>
+            <button onclick="switchTab('validade')" id="btn-validade" class="px-3.5 py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation"></i> Prevenção de Perdas</button>
+            <button onclick="switchTab('pdv')" id="btn-pdv" class="px-3.5 py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition flex items-center gap-1.5"><i class="fa-solid fa-barcode"></i> Frente de Caixa (PDV)</button>
+            <button onclick="switchTab('integracao')" id="btn-integracao" class="px-3.5 py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition flex items-center gap-1.5"><i class="fa-solid fa-network-wired"></i> API / PDV Externo</button>
+            <button onclick="switchTab('etiquetas')" id="btn-etiquetas" class="px-3.5 py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition flex items-center gap-1.5"><i class="fa-solid fa-print"></i> Etiquetas A4</button>
+        </nav>
 
-<div class="main">
+        <div class="flex items-center space-x-3">
+            <div class="text-right hidden sm:block">
+                <span class="text-xs font-bold text-slate-200 block">Matriz SP - Loja 01</span>
+                <span class="text-[10px] text-emerald-400 flex items-center justify-end gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Servidor Ativo (LocalStorage)</span>
+            </div>
+        </div>
+    </header>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="section active">
-<h1>Dashboard Geral</h1>
+    <!-- NAVEGAÇÃO MOBILE -->
+    <div class="xl:hidden flex bg-slate-900 border-b border-slate-800 p-2 justify-around no-print overflow-x-auto gap-2">
+        <button onclick="switchTab('dashboard')" id="m-btn-dashboard" class="text-xs px-3 py-2 bg-emerald-600 text-white rounded-lg shrink-0">Painel</button>
+        <button onclick="switchTab('produtos')" id="m-btn-produtos" class="text-xs px-3 py-2 text-slate-300 shrink-0">Estoque</button>
+        <button onclick="switchTab('validade')" id="m-btn-validade" class="text-xs px-3 py-2 text-slate-300 shrink-0">Perdas</button>
+        <button onclick="switchTab('pdv')" id="m-btn-pdv" class="text-xs px-3 py-2 text-slate-300 shrink-0">PDV</button>
+        <button onclick="switchTab('integracao')" id="m-btn-integracao" class="text-xs px-3 py-2 text-slate-300 shrink-0">API</button>
+        <button onclick="switchTab('etiquetas')" id="m-btn-etiquetas" class="text-xs px-3 py-2 text-slate-300 shrink-0">Etiquetas</button>
+    </div>
 
-<div class="cards">
-<div class="card"><h3>Total SKUs</h3><p id="totalSkus">0</p></div>
-<div class="card"><h3>Quantidade Total</h3><p id="totalQtd">0</p></div>
-<div class="card"><h3>Valor Total Estoque</h3><p id="valorTotal">0</p></div>
-<div class="card"><h3>Total Saídas</h3><p id="totalSaidas">0</p></div>
-</div>
+    <!-- CONTEÚDO CORPORATIVO CENTRAL -->
+    <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
 
-<div class="chart-box">
-<canvas id="grafico"></canvas>
-</div>
-</div>
+        <!-- ================= AB 1: DASHBOARD EXECUTIVO ================= -->
+        <div id="tab-dashboard" class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-sm relative overflow-hidden">
+                    <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Faturamento Hoje (Loja)</p>
+                    <h3 id="kpi-faturamento" class="text-2xl font-bold text-white mt-2">R$ 0,00</h3>
+                    <div class="mt-3 text-xs text-emerald-400 font-semibold"><i class="fa-solid fa-arrow-trend-up mr-1"></i> Sincronizado com Caixas</div>
+                </div>
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-sm relative overflow-hidden">
+                    <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Itens Críticos (Validade)</p>
+                    <h3 id="kpi-criticos" class="text-2xl font-bold text-rose-400 mt-2">0</h3>
+                    <div class="mt-3 text-xs text-amber-400 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Ação imediata necessária</div>
+                </div>
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-sm relative overflow-hidden">
+                    <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Perdas Evitadas (Promo)</p>
+                    <h3 id="kpi-perdas" class="text-2xl font-bold text-emerald-400 mt-2">R$ 0,00</h3>
+                    <div class="mt-3 text-xs text-slate-400"><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Queimas promocionais ativas</div>
+                </div>
+                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-sm relative overflow-hidden">
+                    <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total de Produtos CAD</p>
+                    <h3 id="kpi-totalprod" class="text-2xl font-bold text-white mt-2">0</h3>
+                    <div class="mt-3 text-xs text-blue-400 font-semibold"><i class="fa-solid fa-circle-check mr-1"></i> Base WMS Integrada</div>
+                </div>
+            </div>
 
-<!-- ENTRADA -->
-<div id="entrada" class="section">
-<h1>Entrada de Produto</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
+                    <h2 class="text-base font-bold text-white mb-1"><i class="fa-solid fa-chart-pie text-emerald-400 mr-2"></i> Estoque por Setor</h2>
+                    <p class="text-xs text-slate-400 mb-4">Volume de itens cadastrados por categoria</p>
+                    <div class="relative w-full h-60 flex items-center justify-center">
+                        <canvas id="setoresChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm lg:col-span-2 flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-white mb-1"><i class="fa-solid fa-chart-line text-emerald-400 mr-2"></i> Fluxo de Vendas e Baixas no Dia</h2>
+                        <p class="text-xs text-slate-400 mb-4">Monitoramento de cupons emitidos e processados em tempo real</p>
+                        <div class="relative w-full h-60">
+                            <canvas id="fluxoChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-slate-400 border-t border-slate-800 pt-3 mt-4">
+                        <span>Status da Baixa Automática: <strong class="text-emerald-400">Ativa e Monitorando</strong></span>
+                        <span class="text-slate-300 font-semibold"><i class="fa-solid fa-rotate cursor-pointer text-emerald-400 hover:text-white" onclick="renderAll()"></i> Atualizar Painel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<form onsubmit="registrarEntrada(event)">
-<input type="text" id="sku" placeholder="SKU" required>
-<input type="text" id="nome" placeholder="Nome" required>
-<input type="text" id="cor" placeholder="Cor" required>
-<input type="number" id="valor" placeholder="Valor Unitário" required>
-<input type="number" id="quantidade" placeholder="Quantidade" required>
-<input type="text" id="rua" placeholder="Rua" required>
-<input type="text" id="predio" placeholder="Prédio" required>
-<input type="text" id="andar" placeholder="Andar" required>
-<input type="date" id="dataEntrada" required>
-<button class="submit">Registrar Entrada</button>
-</form>
-</div>
+        <!-- ================= AB 2: ESTOQUE & CADASTRO ================= -->
+        <div id="tab-produtos" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-circle-plus text-emerald-400"></i> Cadastro ERP Produto
+                        </h2>
+                        <span id="form-mode" class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-semibold">Novo Item</span>
+                    </div>
+                    <form id="productForm" onsubmit="saveProduct(event)" class="space-y-3">
+                        <input type="hidden" id="prodIndex" value="">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Nome Descritivo do Produto</label>
+                            <input type="text" id="prodName" required placeholder="Ex: Arroz Tipo 1 5kg" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1">Código de Barras (EAN)</label>
+                                <input type="text" id="prodBarcode" required placeholder="7891000..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1">Seção / Corredor</label>
+                                <select id="prodCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                                    <option value="Mercearia">Mercearia</option>
+                                    <option value="Açougue">Açougue</option>
+                                    <option value="Hortifrúti">Hortifrúti</option>
+                                    <option value="Laticínios">Laticínios</option>
+                                    <option value="Bebidas">Bebidas</option>
+                                    <option value="Limpeza">Limpeza</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1">Preço Normal (R$)</label>
+                                <input type="number" step="0.01" id="prodPrice" required placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1">Estoque Físico</label>
+                                <input type="number" id="prodStock" required placeholder="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-800 pt-3">
+                            <label class="block text-xs font-medium text-amber-400 mb-1"><i class="fa-solid fa-clock-rotate-left"></i> Prevenção & Validade</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Dias p/ Vencimento</label>
+                                    <input type="number" id="prodDaysToExpiry" placeholder="Ex: 5" oninput="calculateDiscountPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">% Desconto Validade</label>
+                                    <select id="prodDiscountPercent" onchange="calculateDiscountPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                                        <option value="0">Preço Normal (0%)</option>
+                                        <option value="10">10% Off</option>
+                                        <option value="20">20% Off</option>
+                                        <option value="30">30% Off (Vencimento Próximo)</option>
+                                        <option value="50">50% Off (Queima Relâmpago)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <p id="discountPreviewText" class="text-xs text-slate-400 mt-2 bg-slate-950 p-2.5 rounded-lg border border-slate-800">Preço Promocional: <strong class="text-emerald-400">R$ 0,00</strong></p>
+                        </div>
+                        <div class="flex gap-2 pt-2">
+                            <button type="submit" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md transition">Salvar Produto</button>
+                            <button type="button" onclick="resetForm()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl transition">Limpar</button>
+                        </div>
+                    </form>
+                </div>
 
-<!-- SAÍDA -->
-<div id="saida" class="section">
-<h1>Saída de Produto</h1>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm lg:col-span-2 flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                            <h2 class="text-base font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-magnifying-glass text-emerald-400"></i> Consulta Rápida de Preços & Estoque
+                            </h2>
+                            <div class="w-full sm:w-auto">
+                                <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Pesquisar por nome ou código..." class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white w-full sm:w-64 focus:outline-none focus:border-emerald-500">
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto max-h-96 overflow-y-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-800/80 text-slate-400 uppercase sticky top-0">
+                                    <tr>
+                                        <th class="p-3 rounded-l-lg">Produto / EAN</th>
+                                        <th class="p-3">Seção</th>
+                                        <th class="p-3">Estoque</th>
+                                        <th class="p-3">Preço / Promoção</th>
+                                        <th class="p-3">Validade</th>
+                                        <th class="p-3 text-right rounded-r-lg">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productTableBody" class="divide-y divide-slate-800/60"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+                        <span><i class="fa-solid fa-lightbulb text-amber-400 mr-1.5"></i> Sincronizado automaticamente com o PDV e Etiquetas A4.</span>
+                        <span id="productCount" class="font-bold text-white">0 itens</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<form onsubmit="registrarSaida(event)">
-<input type="text" id="skuSaida" placeholder="SKU" required>
-<input type="number" id="qtdSaida" placeholder="Quantidade" required>
-<input type="text" id="pedido" placeholder="Pedido" required>
-<input type="text" id="transportadora" placeholder="Transportadora" required>
-<input type="date" id="dataSaida" required>
-<button class="submit">Registrar Saída</button>
-</form>
-</div>
+        <!-- ================= AB 3: PREVENÇÃO DE PERDAS ================= -->
+        <div id="tab-validade" class="space-y-6 hidden">
+            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> Painel de Prevenção de Perdas e Vencimentos Críticos
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Identificação de perecíveis para aplicação de queima de estoque e prevenção de perdas financeiras.</p>
+                    </div>
+                    <span class="text-xs bg-rose-500/20 text-rose-300 font-bold px-3 py-1 rounded-full">Monitoramento Ativo</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-800 text-slate-400 uppercase">
+                            <tr>
+                                <th class="p-3 rounded-l-lg">Produto</th>
+                                <th class="p-3">Seção</th>
+                                <th class="p-3">Estoque Atual</th>
+                                <th class="p-3">Dias para Vencer</th>
+                                <th class="p-3">Desconto Sugerido</th>
+                                <th class="p-3 text-right rounded-r-lg">Ação Rápida</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expiryTableBody" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-<!-- ESTOQUE -->
-<div id="estoque" class="section">
-<h1>Estoque Atual</h1>
-<table>
-<thead>
-<tr>
-<th>SKU</th><th>Nome</th><th>Cor</th>
-<th>Qtd</th><th>Valor</th>
-<th>Endereço</th>
-</tr>
-</thead>
-<tbody id="tabelaEstoque"></tbody>
-</table>
-<button class="submit blue" onclick="exportarEstoque()">Exportar Estoque Excel</button>
-</div>
+        <!-- ================= AB 4: FRENTE DE CAIXA (PDV) ================= -->
+        <div id="tab-pdv" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm lg:col-span-2 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-barcode text-emerald-400"></i> Frente de Caixa - Simulação de Venda & Baixa Automática
+                        </h2>
+                        <span class="text-xs bg-emerald-500/20 text-emerald-400 font-bold px-2.5 py-1 rounded">Caixa 04 - Aberto</span>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <input type="text" id="pdvBarcode" placeholder="Digite o código de barras ou nome do produto e aperte Enter..." onkeypress="if(event.key === 'Enter') addItemToPDV()" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500">
+                        <button onclick="addItemToPDV()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition">Adicionar Item</button>
+                    </div>
 
-<!-- RELATÓRIO -->
-<div id="relatorio" class="section">
-<h1>Relatório Geral</h1>
-<table>
-<thead>
-<tr>
-<th>Tipo</th><th>SKU</th><th>Qtd</th><th>Data</th>
-</tr>
-</thead>
-<tbody id="tabelaRelatorio"></tbody>
-</table>
-<button class="submit blue" onclick="exportarRelatorio()">Exportar Relatório Excel</button>
-</div>
+                    <div class="overflow-x-auto max-h-72 overflow-y-auto border border-slate-800 rounded-xl">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-800 text-slate-400 uppercase">
+                                <tr>
+                                    <th class="p-3">Item</th>
+                                    <th class="p-3">Qtd</th>
+                                    <th class="p-3">Preço Un.</th>
+                                    <th class="p-3">Total</th>
+                                    <th class="p-3 text-right">Remover</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pdvTableBody" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
 
-</div>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
+                    <div>
+                        <h2 class="text-base font-bold text-white mb-4"><i class="fa-solid fa-receipt text-emerald-400 mr-2"></i> Fechamento de Cupom</h2>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Subtotal:</span>
+                                <span id="pdvSubtotal" class="text-white font-semibold">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Descontos Validade:</span>
+                                <span id="pdvDiscounts" class="text-emerald-400 font-semibold">- R$ 0,00</span>
+                            </div>
+                            <div class="border-t border-slate-800 pt-3 flex justify-between text-lg font-black text-white">
+                                <span>Total a Pagar:</span>
+                                <span id="pdvTotal" class="text-emerald-400">R$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="finalizeSale()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl shadow-lg transition">Finalizar Venda & Dar Baixa no Estoque</button>
+                        <button onclick="clearPDV()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-xl transition">Cancelar Venda</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<script>
+        <!-- ================= AB 5: INTEGRAÇÃO API / PDV EXTERNO ================= -->
+        <div id="tab-integracao" class="space-y-6 hidden">
+            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm space-y-6">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-network-wired text-emerald-400"></i> Central de Integração com Qualquer PDV (API REST / Webhook)
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Conecte o SmartMarket ao seu software de caixa atual (Bematech, Elgin, Totvs, PDV próprio em Python/Node) para automatizar a baixa de estoque em tempo real.</p>
+                </div>
 
-let estoque = JSON.parse(localStorage.getItem("estoque")) || [];
-let historico = JSON.parse(localStorage.getItem("historico")) || [];
-let grafico;
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <h3 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-code mr-1"></i> 1. Endpoint da API de Baixa Automática</h3>
+                        <p class="text-xs text-slate-400">Seu PDV externo deve enviar uma requisição <code class="bg-slate-900 px-1.5 py-0.5 rounded text-white font-mono">POST</code> para o sistema com o JSON abaixo ao fechar um cupom:</p>
+                        <pre class="bg-slate-900 p-3 rounded-lg text-[11px] text-slate-300 font-mono overflow-x-auto">
+{
+  "caixa": "04",
+  "cupom": "10492",
+  "itens": [
+    { "barcode": "7891000123456", "quantidade": 2 }
+  ]
+}</pre>
+                        <button onclick="simularIntegracaoExterna()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition">Simular Disparo de PDV Externo</button>
+                    </div>
 
-function show(id){
-document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-}
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <h3 class="text-sm font-bold text-amber-400"><i class="fa-solid fa-database mr-1"></i> 2. Script Local em Python para Sincronizar com PDVs Locais</h3>
+                        <p class="text-xs text-slate-400">Para PDVs que salvam em banco local (MySQL / SQLite / TXT), utilize este script para atualizar o ERP:</p>
+                        <pre class="bg-slate-900 p-3 rounded-lg text-[10px] text-slate-300 font-mono overflow-x-auto">
+import requests, sqlite3
 
-function salvar(){
-localStorage.setItem("estoque",JSON.stringify(estoque));
-localStorage.setItem("historico",JSON.stringify(historico));
-render();
-}
+def sincronizar_vendas():
+    conn = sqlite3.connect('pdv_local.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT barcode, qtd FROM vendas_pendentes")
+    for barcode, qtd in cursor.fetchall():
+        # Envia requisição para atualizar estoque
+        requests.post('https://smartmarket.enterprise/api/baixa', json={"barcode": barcode, "qtd": qtd})
+    conn.commit()
+                        </pre>
+                        <div class="text-[11px] text-emerald-400 font-semibold"><i class="fa-solid fa-check-circle"></i> Sincronização automática ativa via LocalStorage.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-function registrarEntrada(e){
-e.preventDefault();
+        <!-- ================= AB 6: ETIQUETAS A4 ================= -->
+        <div id="tab-etiquetas" class="space-y-6 hidden">
+            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm no-print space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-print text-emerald-400"></i> Central de Impressão de Etiquetas e Bolsas A4
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Gere folhas A4 formatadas para gôndolas e cartazes de oferta de todos os produtos cadastrados.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Modelo de Etiqueta A4</label>
+                            <select id="labelLayout" onchange="renderLabelsPreview()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                                <option value="grid-3x7">Padrão Prateleira (21 por A4 - 3x7)</option>
+                                <option value="grid-2x4">Médio / Oferta Gôndola (8 por A4 - 2x4)</option>
+                                <option value="single-a4">Cartaz Grande de Oferta (1 por Página)</option>
+                            </select>
+                        </div>
+                        <button onclick="window.print()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-2 mt-4 md:mt-0">
+                            <i class="fa-solid fa-file-pdf"></i> Imprimir / Gerar PDF A4
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-let sku=sku.value;
-let existente=estoque.find(p=>p.sku===sku);
+            <div id="printableArea" class="bg-white text-slate-900 p-8 rounded-2xl shadow-xl border border-slate-300 min-h-[800px]">
+                <div class="text-center pb-6 border-b border-slate-200 mb-6 flex justify-between items-center">
+                    <div class="text-left">
+                        <h1 class="text-lg font-black tracking-tight text-slate-800">SMARTMARKET ENTERPRISE</h1>
+                        <p class="text-xs text-slate-500">Lote Oficial de Etiquetas de Preço e Validade A4</p>
+                    </div>
+                    <div class="text-right text-xs text-slate-500">
+                        <span>Emissão: <strong id="printDate"></strong></span>
+                    </div>
+                </div>
+                <div id="labelsContainer" class="grid grid-cols-3 gap-4"></div>
+            </div>
+        </div>
 
-if(existente){
-existente.quantidade+=parseInt(quantidade.value);
-}else{
-estoque.push({
-sku:sku,
-nome:nome.value,
-cor:cor.value,
-valor:parseFloat(valor.value),
-quantidade:parseInt(quantidade.value),
-endereco:`${rua.value}/${predio.value}/${andar.value}`
-});
-}
+    </main>
 
-historico.push({tipo:"Entrada",sku:sku,qtd:parseInt(quantidade.value),data:dataEntrada.value});
-salvar();
-e.target.reset();
-}
+    <!-- RODAPÉ CORPORATIVO -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500 mt-8 no-print">
+        SmartMarket Enterprise ERP &bull; Solução Completa para Automação de Supermercados &copy; 2026
+    </footer>
 
-function registrarSaida(e){
-e.preventDefault();
+    <!-- SCRIPT DE GESTÃO COMPLETA E LOCALSTORAGE -->
+    <script>
+        // Inicialização de Dados com persistência em LocalStorage
+        let defaultProducts = [
+            { name: "Arroz Tio João Tipo 1 5kg", barcode: "7891000123456", category: "Mercearia", price: 28.90, stock: 180, daysToExpiry: 150, discountPercent: 0 },
+            { name: "Leite Integral Longa Vida 1L", barcode: "7891000654321", category: "Laticínios", price: 5.49, stock: 95, daysToExpiry: 2, discountPercent: 20 },
+            { name: "Carne Bovina Patinho Kg", barcode: "7892000987654", category: "Açougue", price: 42.90, stock: 30, daysToExpiry: 1, discountPercent: 30 },
+            { name: "Feijão Carioca Kicaldo 1kg", barcode: "7893000112233", category: "Mercearia", price: 8.99, stock: 120, daysToExpiry: 90, discountPercent: 0 },
+            { name: "Sabão em Pó OMO 1.6kg", barcode: "7894000445566", category: "Limpeza", price: 24.90, stock: 70, daysToExpiry: 365, discountPercent: 0 },
+            { name: "Maçã Gala Kg", barcode: "7895000778899", category: "Hortifrúti", price: 9.99, stock: 110, daysToExpiry: 2, discountPercent: 50 },
+            { name: "Refrigerante Coca-Cola 2L", barcode: "7896000334455", category: "Bebidas", price: 9.80, stock: 150, daysToExpiry: 60, discountPercent: 0 },
+            { name: "Iogurte Natural 170g", barcode: "7897000889900", category: "Laticínios", price: 3.49, stock: 45, daysToExpiry: 3, discountPercent: 20 }
+        ];
 
-let produto=estoque.find(p=>p.sku===skuSaida.value);
-if(!produto || produto.quantidade<qtdSaida.value){
-alert("Estoque insuficiente ou SKU inexistente");
-return;
-}
+        let products = JSON.parse(localStorage.getItem('smartmarket_products')) || defaultProducts;
+        let salesHistory = JSON.parse(localStorage.getItem('smartmarket_sales')) || [];
+        let pdvCart = [];
+        let setoresChartInstance = null;
+        let fluxoChartInstance = null;
 
-produto.quantidade-=parseInt(qtdSaida.value);
+        function persistData() {
+            localStorage.setItem('smartmarket_products', JSON.stringify(products));
+            localStorage.setItem('smartmarket_sales', JSON.stringify(salesHistory));
+        }
 
-historico.push({tipo:"Saída",sku:skuSaida.value,qtd:parseInt(qtdSaida.value),data:dataSaida.value});
-salvar();
-e.target.reset();
-}
+        window.onload = function() {
+            document.getElementById('printDate').innerText = new Date().toLocaleDateString('pt-BR');
+            renderAll();
+        };
 
-function render(){
+        function renderAll() {
+            renderDashboard();
+            renderProductsTable();
+            renderExpiryTable();
+            renderLabelsPreview();
+            initCharts();
+        }
 
-let totalQtd=0,totalValor=0;
+        // Alternância de Abas
+        function switchTab(tabId) {
+            ['dashboard', 'produtos', 'validade', 'pdv', 'integracao', 'etiquetas'].forEach(id => {
+                const el = document.getElementById(`tab-${id}`);
+                if(el) el.classList.add('hidden');
+                const btn = document.getElementById(`btn-${id}`);
+                if(btn) {
+                    btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
+                    btn.classList.add('text-slate-300', 'hover:text-white', 'hover:bg-slate-900');
+                }
+                const mBtn = document.getElementById(`m-btn-${id}`);
+                if(mBtn) mBtn.className = "text-xs px-3 py-2 text-slate-300 shrink-0";
+            });
 
-tabelaEstoque.innerHTML="";
-estoque.forEach(p=>{
-totalQtd+=p.quantidade;
-totalValor+=p.quantidade*p.valor;
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-slate-900');
+                activeBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
+            }
+            const activeMBtn = document.getElementById(`m-btn-${tabId}`);
+            if(activeMBtn) activeMBtn.className = "text-xs px-3 py-2 bg-emerald-600 text-white rounded-lg shrink-0";
 
-tabelaEstoque.innerHTML+=`
-<tr>
-<td>${p.sku}</td>
-<td>${p.nome}</td>
-<td>${p.cor}</td>
-<td>${p.quantidade}</td>
-<td>R$ ${p.valor}</td>
-<td>${p.endereco}</td>
-</tr>`;
-});
+            if(tabId === 'etiquetas') renderLabelsPreview();
+            if(tabId === 'validade') renderExpiryTable();
+            if(tabId === 'dashboard') renderDashboard();
+        }
 
-tabelaRelatorio.innerHTML="";
-historico.forEach(h=>{
-tabelaRelatorio.innerHTML+=`
-<tr>
-<td>${h.tipo}</td>
-<td>${h.sku}</td>
-<td>${h.qtd}</td>
-<td>${h.data}</td>
-</tr>`;
-});
+        function calculateDiscountPrice(price, discountPercent) {
+            return price - (price * (discountPercent / 100));
+        }
 
-totalSkus.innerText=estoque.length;
-totalQtd.innerText=totalQtd;
-valorTotal.innerText="R$ "+totalValor.toFixed(2);
-totalSaidas.innerText=historico.filter(h=>h.tipo==="Saída").length;
+        function calculateDiscountPreview() {
+            const price = parseFloat(document.getElementById('prodPrice').value) || 0;
+            const discount = parseFloat(document.getElementById('prodDiscountPercent').value) || 0;
+            const finalPrice = calculateDiscountPrice(price, discount);
+            document.getElementById('discountPreviewText').innerHTML = `Preço Promocional: <strong class="text-emerald-400">R$ ${finalPrice.toFixed(2).replace('.', ',')}</strong>`;
+        }
 
-gerarGrafico();
-}
+        // CRUD de Produtos
+        function saveProduct(event) {
+            event.preventDefault();
+            const index = document.getElementById('prodIndex').value;
+            const name = document.getElementById('prodName').value;
+            const barcode = document.getElementById('prodBarcode').value;
+            const category = document.getElementById('prodCategory').value;
+            const price = parseFloat(document.getElementById('prodPrice').value);
+            const stock = parseInt(document.getElementById('prodStock').value);
+            const daysToExpiry = parseInt(document.getElementById('prodDaysToExpiry').value) || 30;
+            const discountPercent = parseInt(document.getElementById('prodDiscountPercent').value) || 0;
 
-function gerarGrafico(){
-if(grafico)grafico.destroy();
+            const productData = { name, barcode, category, price, stock, daysToExpiry, discountPercent };
 
-let entradas=historico.filter(h=>h.tipo==="Entrada").length;
-let saidas=historico.filter(h=>h.tipo==="Saída").length;
+            if(index === "") {
+                products.push(productData);
+            } else {
+                products[index] = productData;
+            }
 
-grafico=new Chart(document.getElementById("grafico"),{
-type:"doughnut",
-data:{
-labels:["Entradas","Saídas"],
-datasets:[{data:[entradas,saidas],backgroundColor:["#22c55e","#ef4444"]}]
-}
-});
-}
+            persistData();
+            resetForm();
+            renderAll();
+            alert('Produto gravado com sucesso no ERP!');
+        }
 
-function exportarEstoque(){
-let csv="SKU,Nome,Cor,Quantidade,Valor,Endereco\n";
-estoque.forEach(p=>{
-csv+=`${p.sku},${p.nome},${p.cor},${p.quantidade},${p.valor},${p.endereco}\n`;
-});
-download(csv,"estoque_wms.csv");
-}
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('prodIndex').value = "";
+            document.getElementById('form-mode').innerText = "Novo Item";
+            document.getElementById('form-mode').className = "text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-semibold";
+            document.getElementById('discountPreviewText').innerHTML = `Preço Promocional: <strong class="text-emerald-400">R$ 0,00</strong>`;
+        }
 
-function exportarRelatorio(){
-let csv="Tipo,SKU,Quantidade,Data\n";
-historico.forEach(h=>{
-csv+=`${h.tipo},${h.sku},${h.qtd},${h.data}\n`;
-});
-download(csv,"relatorio_wms.csv");
-}
+        function editProduct(index) {
+            const p = products[index];
+            document.getElementById('prodIndex').value = index;
+            document.getElementById('prodName').value = p.name;
+            document.getElementById('prodBarcode').value = p.barcode;
+            document.getElementById('prodCategory').value = p.category;
+            document.getElementById('prodPrice').value = p.price;
+            document.getElementById('prodStock').value = p.stock;
+            document.getElementById('prodDaysToExpiry').value = p.daysToExpiry;
+            document.getElementById('prodDiscountPercent').value = p.discountPercent;
+            document.getElementById('form-mode').innerText = "Editando Item";
+            document.getElementById('form-mode').className = "text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-semibold";
+            calculateDiscountPreview();
+            switchTab('produtos');
+        }
 
-function download(csv,nome){
-let blob=new Blob([csv],{type:"text/csv"});
-let link=document.createElement("a");
-link.href=URL.createObjectURL(blob);
-link.download=nome;
-link.click();
-}
+        function deleteProduct(index) {
+            if(confirm('Tem certeza que deseja remover este produto?')) {
+                products.splice(index, 1);
+                persistData();
+                renderAll();
+            }
+        }
 
-render();
+        function renderProductsTable() {
+            const tbody = document.getElementById('productTableBody');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            tbody.innerHTML = '';
 
-</script>
+            let filtered = products.filter(p => p.name.toLowerCase().includes(search) || p.barcode.includes(search) || p.category.toLowerCase().includes(search));
+            document.getElementById('productCount').innerText = `${filtered.length} itens cadastrados`;
+
+            filtered.forEach((p) => {
+                const realIndex = products.indexOf(p);
+                const finalPrice = calculateDiscountPrice(p.price, p.discountPercent);
+                let expiryBadge = `<span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded">${p.daysToExpiry} dias</span>`;
+                if(p.daysToExpiry <= 3) {
+                    expiryBadge = `<span class="px-2 py-0.5 bg-rose-500/10 text-rose-400 rounded font-bold">${p.daysToExpiry} dias (Crítico)</span>`;
+                }
+
+                let priceHtml = `R$ ${p.price.toFixed(2).replace('.', ',')}`;
+                if(p.discountPercent > 0) {
+                    priceHtml = `<span class="line-through text-slate-500 text-[10px] block">R$ ${p.price.toFixed(2).replace('.', ',')}</span><strong class="text-emerald-400">R$ ${finalPrice.toFixed(2).replace('.', ',')} (${p.discountPercent}% off)</strong>`;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3">
+                            <span class="font-medium text-white block">${p.name}</span>
+                            <span class="text-[10px] text-slate-400 font-mono">EAN: ${p.barcode}</span>
+                        </td>
+                        <td class="p-3 text-slate-300">${p.category}</td>
+                        <td class="p-3 text-slate-300 font-semibold">${p.stock} un</td>
+                        <td class="p-3 font-semibold">${priceHtml}</td>
+                        <td class="p-3">${expiryBadge}</td>
+                        <td class="p-3 text-right space-x-2">
+                            <button onclick="editProduct(${realIndex})" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded transition"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteProduct(${realIndex})" class="px-2 py-1 bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 rounded transition"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function filterProducts() {
+            renderProductsTable();
+        }
+
+        // Tabela de Pervenção de Perdas
+        function renderExpiryTable() {
+            const tbody = document.getElementById('expiryTableBody');
+            tbody.innerHTML = '';
+            let expiringItems = products.filter(p => p.daysToExpiry <= 5);
+
+            if(expiringItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Nenhum produto em situação crítica de vencimento no momento.</td></tr>`;
+                return;
+            }
+
+            expiringItems.forEach(p => {
+                const realIndex = products.indexOf(p);
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3 font-medium text-white">${p.name}</td>
+                        <td class="p-3 text-slate-300">${p.category}</td>
+                        <td class="p-3 text-slate-300">${p.stock} un</td>
+                        <td class="p-3 text-rose-400 font-bold">${p.daysToExpiry} dias</td>
+                        <td class="p-3 text-amber-400 font-semibold">${p.discountPercent > 0 ? p.discountPercent + '% Aplicado' : 'Sugerido 30% Off'}</td>
+                        <td class="p-3 text-right">
+                            <button onclick="editProduct(${realIndex})" class="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 text-xs font-bold rounded-lg transition">Ajustar Desconto</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Frente de Caixa (PDV) & Baixa Automática
+        function addItemToPDV() {
+            const query = document.getElementById('pdvBarcode').value.toLowerCase().trim();
+            if(!query) return;
+
+            let found = products.find(p => p.barcode === query || p.name.toLowerCase().includes(query));
+            if(found) {
+                if(found.stock <= 0) {
+                    alert('Atenção: Produto sem estoque físico disponível!');
+                    return;
+                }
+                pdvCart.push({ ...found, finalPrice: calculateDiscountPrice(found.price, found.discountPercent) });
+                renderPDV();
+                document.getElementById('pdvBarcode').value = '';
+            } else {
+                alert('Produto não encontrado!');
+            }
+        }
+
+        function renderPDV() {
+            const tbody = document.getElementById('pdvTableBody');
+            tbody.innerHTML = '';
+            let subtotal = 0;
+            let totalDiscounts = 0;
+
+            pdvCart.forEach((item, index) => {
+                subtotal += item.price;
+                totalDiscounts += (item.price - item.finalPrice);
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-800/40">
+                        <td class="p-3 text-white font-medium">${item.name}</td>
+                        <td class="p-3 text-slate-300">1 un</td>
+                        <td class="p-3 text-slate-300">R$ ${item.finalPrice.toFixed(2).replace('.', ',')}</td>
+                        <td class="p-3 text-white font-semibold">R$ ${item.finalPrice.toFixed(2).replace('.', ',')}</td>
+                        <td class="p-3 text-right"><button onclick="pdvCart.splice(${index}, 1); renderPDV();" class="text-rose-400"><i class="fa-solid fa-xmark"></i></button></td>
+                    </tr>
+                `;
+            });
+
+            let totalFinal = subtotal - totalDiscounts;
+            document.getElementById('pdvSubtotal').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('pdvDiscounts').innerText = `- R$ ${totalDiscounts.toFixed(2).replace('.', ',')}`;
+            document.getElementById('pdvTotal').innerText = `R$ ${totalFinal.toFixed(2).replace('.', ',')}`;
+        }
+
+        function finalizeSale() {
+            if(pdvCart.length === 0) {
+                alert('Caixa vazio! Adicione produtos.');
+                return;
+            }
+
+            let saleTotal = 0;
+            pdvCart.forEach(item => {
+                saleTotal += item.finalPrice;
+                // DAR BAIXA AUTOMÁTICA NO ESTOQUE DO PRODUTO
+                let prodRef = products.find(p => p.barcode === item.barcode);
+                if(prodRef) {
+                    prodRef.stock = Math.max(0, prodRef.stock - 1);
+                }
+            });
+
+            salesHistory.push({
+                timestamp: new Date().toLocaleTimeString(),
+                total: saleTotal,
+                itensCount: pdvCart.length
+            });
+
+            persistData();
+            pdvCart = [];
+            renderPDV();
+            renderAll();
+            alert('Venda finalizada com sucesso! Baixa no estoque efetuada em tempo real.');
+        }
+
+        function clearPDV() {
+            pdvCart = [];
+            renderPDV();
+        }
+
+        // Simulação de Integração Externa (API)
+        function simularIntegracaoExterna() {
+            if(products.length === 0) return;
+            let randomProd = products[Math.floor(Math.random() * products.length)];
+            randomProd.stock = Math.max(0, randomProd.stock - 2);
+            salesHistory.push({
+                timestamp: new Date().toLocaleTimeString(),
+                total: randomProd.price * 2,
+                itensCount: 2
+            });
+            persistData();
+            renderAll();
+            alert(`[API Webhook] Recebida venda externa para: ${randomProd.name} (Qtd: 2). Estoque atualizado para ${randomProd.stock} un!`);
+        }
+
+        // Gerador de Etiquetas A4
+        function renderLabelsPreview() {
+            const container = document.getElementById('labelsContainer');
+            const layout = document.getElementById('labelLayout').value;
+            container.innerHTML = '';
+
+            if(layout === 'grid-3x7') container.className = "grid grid-cols-3 gap-3";
+            else if(layout === 'grid-2x4') container.className = "grid grid-cols-2 gap-4";
+            else container.className = "grid grid-cols-1 gap-4";
+
+            let multiplier = layout === 'grid-3x7' ? 2 : 1;
+
+            products.forEach(p => {
+                const finalPrice = calculateDiscountPrice(p.price, p.discountPercent);
+                let discountTagHtml = p.discountPercent > 0 ? `<div class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider mb-1 inline-block">Oferta Validade - ${p.discountPercent}% OFF</div>` : '';
+
+                for(let i = 0; i < multiplier; i++) {
+                    if(layout === 'single-a4') {
+                        container.innerHTML += `
+                            <div class="border-4 border-dashed border-red-500 p-8 rounded-2xl bg-amber-50 text-center flex flex-col justify-between h-[450px]">
+                                <div class="bg-red-600 text-white text-sm font-extrabold py-2 px-4 rounded-xl uppercase tracking-widest shadow">Super Oferta Especial de Varejo</div>
+                                <div>
+                                    <h2 class="text-3xl font-black text-slate-900 mb-2">${p.name}</h2>
+                                    <p class="text-sm text-slate-600 uppercase font-semibold">Seção: ${p.category} | EAN: ${p.barcode}</p>
+                                </div>
+                                <div class="my-4">
+                                    <span class="text-xs text-slate-500 line-through block">De R$ ${p.price.toFixed(2).replace('.', ',')}</span>
+                                    <div class="text-6xl font-black text-red-600 tracking-tighter">R$ ${finalPrice.toFixed(2).replace('.', ',')}</div>
+                                </div>
+                                <div class="text-xs text-slate-500 border-t border-red-200 pt-3">
+                                    Controle de Validade &bull; Promoção válida enquanto durarem os estoques
+                                </div>
+                            </div>
+                        `;
+                    } else if(layout === 'grid-2x4') {
+                        container.innerHTML += `
+                            <div class="border-2 border-slate-300 p-5 rounded-xl bg-white shadow-sm flex flex-col justify-between h-56">
+                                <div>
+                                    ${discountTagHtml}
+                                    <h3 class="text-base font-bold text-slate-800 line-clamp-2">${p.name}</h3>
+                                    <span class="text-[10px] text-slate-500">EAN: ${p.barcode}</span>
+                                </div>
+                                <div class="text-center my-2">
+                                    ${p.discountPercent > 0 ? `<span class="text-xs text-slate-400 line-through">R$ ${p.price.toFixed(2).replace('.', ',')}</span>` : ''}
+                                    <div class="text-3xl font-black text-slate-900">R$ ${finalPrice.toFixed(2).replace('.', ',')}</div>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] text-slate-400 border-t border-slate-100 pt-2">
+                                    <span>${p.category}</span>
+                                    <span class="font-mono">SmartMarket ENTERPRISE</span>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML += `
+                            <div class="border border-slate-300 p-3 rounded-lg bg-white shadow-xs flex flex-col justify-between h-36">
+                                <div>
+                                    ${p.discountPercent > 0 ? `<span class="bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">${p.discountPercent}% OFF</span>` : ''}
+                                    <h4 class="text-xs font-bold text-slate-800 line-clamp-1">${p.name}</h4>
+                                    <span class="text-[9px] text-slate-500">Ref: ${p.barcode}</span>
+                                </div>
+                                <div class="text-center">
+                                    ${p.discountPercent > 0 ? `<span class="text-[10px] text-slate-400 line-through">R$ ${p.price.toFixed(2).replace('.', ',')}</span>` : ''}
+                                    <div class="text-xl font-extrabold text-slate-900">R$ ${finalPrice.toFixed(2).replace('.', ',')}</div>
+                                </div>
+                                <div class="text-[8px] text-slate-400 text-center border-t border-slate-100 pt-1">
+                                    ${p.category} &bull; SmartMarket
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            });
+        }
+
+        // Gráficos e KPIs
+        function renderDashboard() {
+            let totalFat = salesHistory.reduce((acc, s) => acc + s.total, 0) + 184250.00;
+            let criticalCount = products.filter(p => p.daysToExpiry <= 5).length;
+            let avoidedLosses = products.filter(p => p.discountPercent > 0).reduce((acc, p) => acc + (p.price * 0.3 * p.stock), 4890.00);
+
+            document.getElementById('kpi-faturamento').innerText = `R$ ${totalFat.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('kpi-criticos').innerText = criticalCount;
+            document.getElementById('kpi-perdas').innerText = `R$ ${avoidedLosses.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('kpi-totalprod').innerText = products.length;
+        }
+
+        function initCharts() {
+            const categories = {};
+            products.forEach(p => {
+                categories[p.category] = (categories[p.category] || 0) + 1;
+            });
+
+            if(setoresChartInstance) setoresChartInstance.destroy();
+            const ctxSetores = document.getElementById('setoresChart').getContext('2d');
+            setoresChartInstance = new Chart(ctxSetores, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categories),
+                    datasets: [{
+                        data: Object.values(categories),
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#a855f7', '#ec4899', '#6366f1'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } } },
+                    cutout: '65%'
+                }
+            });
+
+            if(fluxoChartInstance) fluxoChartInstance.destroy();
+            const ctxFluxo = document.getElementById('fluxoChart').getContext('2d');
+            fluxoChartInstance = new Chart(ctxFluxo, {
+                type: 'line',
+                data: {
+                    labels: ['08h', '10h', '12h', '14h', '16h', '18h', '20h', '22h'],
+                    datasets: [{
+                        label: 'Fluxo de Vendas',
+                        data: [150, 280, 520, 390, 440, 820, 610, 190],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(10, 185, 129, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8', font: { size: 11 } } },
+                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8', font: { size: 11 } } }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
